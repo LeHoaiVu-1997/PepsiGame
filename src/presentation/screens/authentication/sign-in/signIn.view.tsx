@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   Text,
   SafeAreaView,
@@ -7,7 +7,6 @@ import {
   Dimensions,
   Image,
   Alert,
-  TextInput,
 } from 'react-native';
 import {THREECANONE} from '../../../../../resource/images';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -32,7 +31,6 @@ const signInSchema = Yup.object({
 
 const SignIn: React.FC = (props: any) => {
   const {navigation} = props;
-  const [validationStatus, setValidationStatus] = useState(false);
   return (
     <SafeAreaView style={styles.fullScreenContainer}>
       <View style={styles.greetingContainer}>
@@ -46,9 +44,10 @@ const SignIn: React.FC = (props: any) => {
           initialValues={{phoneNumber: ''}}
           validationSchema={signInSchema}
           onSubmit={values => {
-            Alert.alert(
-              `You signed in with information: ${values.phoneNumber}`,
-            );
+            // Alert.alert(
+            //   `You signed in with information: ${values.phoneNumber}`,
+            // );
+            navigation.navigate('VerifyOTP');
           }}>
           {formik => (
             <KeyboardAwareScrollView>

@@ -20,6 +20,7 @@ export interface TextInputFieldProps {
   placeholder?: string;
   numKeyboard?: boolean;
   inputProps?: TextInputProps;
+  ref?: any;
 }
 
 const TextInputField: React.FC<TextInputFieldProps> = props => {
@@ -28,7 +29,7 @@ const TextInputField: React.FC<TextInputFieldProps> = props => {
     errorStyle,
     errorLabel,
     placeholder,
-    numKeyboard = false,
+    numKeyboard,
     inputProps = {},
   } = props;
 

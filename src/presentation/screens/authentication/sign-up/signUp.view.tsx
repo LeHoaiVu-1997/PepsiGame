@@ -56,9 +56,10 @@ const SignUp: React.FC = (props: any) => {
           initialValues={{phoneNumber: '', userName: ''}}
           validationSchema={signInSchema}
           onSubmit={values => {
-            Alert.alert(
-              `You signed up with information: ${values.phoneNumber} and ${values.userName}`,
-            );
+            // Alert.alert(
+            //   `You signed up with information: ${values.phoneNumber} and ${values.userName}`,
+            // );
+            navigation.navigate('VerifyOTP');
           }}>
           {formik => (
             <KeyboardAwareScrollView>
