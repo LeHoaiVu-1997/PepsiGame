@@ -43,7 +43,8 @@ const VerifyOtp: React.FC = (props: any) => {
   };
 
   const verifyOtp = () => {
-    Alert.alert('You pressed otp: ', otp.join(''));
+    // Alert.alert('You pressed otp: ', otp.join(''));
+    navigation.navigate('Main screen');
   };
 
   return (

@@ -20,11 +20,19 @@ export interface IButton {
   onPress?: () => void;
   title: string;
   titleStyle?: TextStyle;
+  subComponent?: any;
 }
 
 const RectangleButton: React.FC<IButton> = props => {
-  const {activeStyle, inactiveStyle, disabled, onPress, title, titleStyle} =
-    props;
+  const {
+    activeStyle,
+    inactiveStyle,
+    disabled,
+    onPress,
+    title,
+    titleStyle,
+    subComponent,
+  } = props;
 
   return (
     <TouchableOpacity
@@ -36,6 +44,7 @@ const RectangleButton: React.FC<IButton> = props => {
       onPress={onPress}
       disabled={disabled}>
       <Text style={titleStyle ? titleStyle : styles.title}>{title}</Text>
+      {subComponent}
     </TouchableOpacity>
   );
 };
