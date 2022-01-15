@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SignUp from '../screens/authentication/sign-up/signUp.view';
 import VerifyOtp from '../screens/authentication/otp/otpVerification.view';
 import MainScreen from '../screens/authorized/mainscreen/main-screen';
+import Game from '../screens/authorized/game/game';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ export const AuthenticationNavigatior: React.FC = () => {
       <Stack.Screen name="Term of Service" component={TermOfService} />
       <Stack.Screen name="VerifyOTP" component={VerifyOtp} />
       <Stack.Screen name="Main screen" component={MainScreen} />
+      <Stack.Screen name="Game" component={Game} />
     </Stack.Navigator>
   );
 };

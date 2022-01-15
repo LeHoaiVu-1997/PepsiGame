@@ -10,20 +10,24 @@ import {
 import {RootState} from '../../../redux/store';
 import {useSelector} from 'react-redux';
 import RectangleButton from '../../../components/buttons/rectangle-button';
-import TextButton from '../../../components/buttons/text-button';
 import ImageButton from '../../../components/buttons/image-button';
 import {HEAD, LOGOUT_BUTTON} from '../../../../../resource/images';
 import LogoutPopup from '../../../components/popup/logout-popup';
+import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const MainScreen: React.FC = (props: any) => {
   const {navigation} = props;
-  const playTimes = useSelector(
-    (state: RootState) => state.authorized.play_time,
+  const playTimesExchange = useSelector(
+    (state: RootState) => state.authorized.play_times_exchange,
+  );
+  const playTimesFree = useSelector(
+    (state: RootState) => state.authorized.paly_times_free,
   );
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [ptsModalVisible, setPtsModalVisible] = useState(false);
 
   const renderPlayTimesLeft = (times: number) => {
     return (
@@ -33,6 +37,11 @@ const MainScreen: React.FC = (props: any) => {
         <Text style={styles.subText}>{' lượt chơi'}</Text>
       </View>
     );
+  };
+
+  const navigateToGame = () => {
+    navigation.navigate('Game');
+    setPtsModalVisible(!ptsModalVisible);
   };
 
   return (
@@ -50,7 +59,10 @@ const MainScreen: React.FC = (props: any) => {
         <RectangleButton
           title={'Chơi ngay'}
           activeStyle={styles.buttonRed}
-          subComponent={renderPlayTimesLeft(playTimes)}
+          subComponent={renderPlayTimesLeft(playTimesExchange + playTimesFree)}
+          onPress={() => {
+            setPtsModalVisible(!ptsModalVisible);
+          }}
         />
         <RectangleButton
           title={'Quét mã'}
@@ -75,6 +87,13 @@ const MainScreen: React.FC = (props: any) => {
           navigation.popToTop();
         }}
         onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+      />
+      <PlayTimesSelection
+        visible={ptsModalVisible}
+        onClose={() => setPtsModalVisible(!ptsModalVisible)}
+        data={{playTimesFree, playTimesExchange}}
+        onPressFirst={() => navigateToGame()}
+        onPressSecond={() => navigateToGame()}
       />
     </SafeAreaView>
   );
