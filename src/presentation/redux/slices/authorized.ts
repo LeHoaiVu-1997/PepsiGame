@@ -1,10 +1,11 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 const authorizedSlice = createSlice({
   name: 'authorized',
   initialState: {
     play_times_exchange: 5,
-    paly_times_free: 3,
+    play_times_free: 3,
+    current_play_type: '', // get value either "exchange" or "free"
   },
   reducers: {
     incrementExchange: state => {
@@ -16,12 +17,15 @@ const authorizedSlice = createSlice({
       }
     },
     incrementFree: state => {
-      state.paly_times_free += 1;
+      state.play_times_free += 1;
     },
     decrementFree: state => {
       if (state.play_times_exchange > 0) {
-        state.paly_times_free -= 1;
+        state.play_times_free -= 1;
       }
+    },
+    setPlayType: (state, action: PayloadAction<string>) => {
+      state.current_play_type = action.payload;
     },
   },
 });
@@ -31,5 +35,6 @@ export const {
   decrementExchange,
   incrementFree,
   decrementFree,
+  setPlayType,
 } = authorizedSlice.actions;
 export default authorizedSlice.reducer;

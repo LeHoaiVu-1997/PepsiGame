@@ -1,19 +1,86 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, SafeAreaView, View, Text, Dimensions} from 'react-native';
 import HorizontalImageSwipeButton from '../../../components/buttons/horizotal-image-swipe-button';
 import {HEAD} from '../../../../../resource/images';
+import Header from '../../../components/header/header';
+import LogoutPopup from '../../../components/popup/logout-popup';
+import {
+  decrementExchange,
+  decrementFree,
+} from '../../../redux/slices/authorized';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootState} from '../../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Game: React.FC = (props: any) => {
   const {navigation} = props;
-  const onFinish = () => {};
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const playType = useSelector(
+    (state: RootState) => state.authorized.current_play_type,
+  );
+  const playTimesExchange = useSelector(
+    (state: RootState) => state.authorized.play_times_exchange,
+  );
+  const playTimesFree = useSelector(
+    (state: RootState) => state.authorized.play_times_free,
+  );
+
+  const dispatch = useDispatch();
+
+  const onFinish = () => {
+    if (playType === 'exchange') {
+      dispatch(decrementExchange());
+      navigation.navigate('Congratulation');
+    } else if (playType === 'free') {
+      dispatch(decrementFree());
+      navigation.navigate('Congratulation');
+    } else {
+      navigation.navigate('Main screen');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <HorizontalImageSwipeButton
-        imageSource={HEAD}
-        onFinish={() => console.log('finish')}
+      <View style={styles.headerContainer}>
+        <Header
+          leftButtonAvailable={true}
+          onPressLeftButton={() => {
+            navigation.goBack();
+          }}
+          title={'Vuốt lên để chơi'}
+          rightButtonAvailable={true}
+          onPressRightButton={() => {
+            setLogoutModalVisible(!logoutModalVisible);
+          }}
+        />
+      </View>
+      <View style={styles.contentContainer}>
+        <View style={styles.informationContainer}>
+          <Text style={styles.text}>{'Bạn còn '}</Text>
+          {/* <Text style={styles.textHightlight}>
+            {playTimesExchange + ' ' + playTimesFree}
+          </Text> */}
+          <Text style={styles.textHightlight}>
+            {playType === 'free' ? playTimesFree : playTimesExchange}
+          </Text>
+          <Text style={styles.text}>{' lượt chơi '}</Text>
+          <Text style={styles.text}>
+            {playType === 'free' ? 'miễn phí' : 'quy đổi'}
+          </Text>
+        </View>
+        <View style={styles.gameContainer}>
+          <HorizontalImageSwipeButton imageSource={HEAD} onFinish={onFinish} />
+        </View>
+      </View>
+      <LogoutPopup
+        visible={logoutModalVisible}
+        onPressConfirm={() => {
+          setLogoutModalVisible(!logoutModalVisible);
+          navigation.popToTop();
+        }}
+        onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
       />
     </SafeAreaView>
   );
@@ -23,7 +90,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1e76e3',
+  },
+  headerContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  contentContainer: {
+    flex: 9,
+  },
+  informationContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  gameContainer: {
+    flex: 9,
     justifyContent: 'flex-end',
+  },
+  text: {
+    color: 'white',
+    fontSize: 13,
+  },
+  textHightlight: {
+    color: 'yellow',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
 

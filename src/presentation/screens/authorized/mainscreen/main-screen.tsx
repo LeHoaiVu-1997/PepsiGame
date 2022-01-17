@@ -8,12 +8,13 @@ import {
   Image,
 } from 'react-native';
 import {RootState} from '../../../redux/store';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import RectangleButton from '../../../components/buttons/rectangle-button';
-import ImageButton from '../../../components/buttons/image-button';
-import {HEAD, LOGOUT_BUTTON} from '../../../../../resource/images';
+import {HEAD} from '../../../../../resource/images';
 import LogoutPopup from '../../../components/popup/logout-popup';
 import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
+import Header from '../../../components/header/header';
+import {setPlayType} from '../../../redux/slices/authorized';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -24,8 +25,9 @@ const MainScreen: React.FC = (props: any) => {
     (state: RootState) => state.authorized.play_times_exchange,
   );
   const playTimesFree = useSelector(
-    (state: RootState) => state.authorized.paly_times_free,
+    (state: RootState) => state.authorized.play_times_free,
   );
+  const dispatch = useDispatch();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [ptsModalVisible, setPtsModalVisible] = useState(false);
 
@@ -39,62 +41,71 @@ const MainScreen: React.FC = (props: any) => {
     );
   };
 
-  const navigateToGame = () => {
+  const navigateToGame = (playType: string) => {
+    dispatch(setPlayType(playType));
     navigation.navigate('Game');
     setPtsModalVisible(!ptsModalVisible);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.topContainer}>
-        <ImageButton
-          imageSource={LOGOUT_BUTTON}
-          onPress={() => setLogoutModalVisible(!logoutModalVisible)}
-          buttonContainerStyle={styles.logoutButton}
-        />
-        <Image style={styles.headImage} source={HEAD} />
-      </View>
-      <View style={styles.bottomContainer}>
-        <Text style={styles.textInstruction}>{'Hướng dẫn'}</Text>
-        <RectangleButton
-          title={'Chơi ngay'}
-          activeStyle={styles.buttonRed}
-          subComponent={renderPlayTimesLeft(playTimesExchange + playTimesFree)}
-          onPress={() => {
-            setPtsModalVisible(!ptsModalVisible);
+      <View style={styles.headerContainer}>
+        <Header
+          leftButtonAvailable={false}
+          rightButtonAvailable={true}
+          onPressRightButton={() => {
+            setLogoutModalVisible(!logoutModalVisible);
           }}
         />
-        <RectangleButton
-          title={'Quét mã'}
-          activeStyle={styles.buttonWhite}
-          titleStyle={styles.textButton}
+      </View>
+      <View style={styles.contentContainer}>
+        <View style={styles.topContainer}>
+          <Image style={styles.headImage} source={HEAD} />
+        </View>
+        <View style={styles.bottomContainer}>
+          <Text style={styles.textInstruction}>{'Hướng dẫn'}</Text>
+          <RectangleButton
+            title={'Chơi ngay'}
+            activeStyle={styles.buttonRed}
+            subComponent={renderPlayTimesLeft(
+              playTimesExchange + playTimesFree,
+            )}
+            onPress={() => {
+              setPtsModalVisible(!ptsModalVisible);
+            }}
+          />
+          <RectangleButton
+            title={'Quét mã'}
+            activeStyle={styles.buttonWhite}
+            titleStyle={styles.textButton}
+          />
+          <RectangleButton
+            title={'Bộ sưu tập'}
+            activeStyle={styles.buttonWhite}
+            titleStyle={styles.textButton}
+          />
+          <RectangleButton
+            title={'Chi tiết quà tặng'}
+            activeStyle={styles.buttonWhite}
+            titleStyle={styles.textButton}
+          />
+        </View>
+        <LogoutPopup
+          visible={logoutModalVisible}
+          onPressConfirm={() => {
+            setLogoutModalVisible(!logoutModalVisible);
+            navigation.popToTop();
+          }}
+          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
         />
-        <RectangleButton
-          title={'Bộ sưu tập'}
-          activeStyle={styles.buttonWhite}
-          titleStyle={styles.textButton}
-        />
-        <RectangleButton
-          title={'Chi tiết quà tặng'}
-          activeStyle={styles.buttonWhite}
-          titleStyle={styles.textButton}
+        <PlayTimesSelection
+          visible={ptsModalVisible}
+          onClose={() => setPtsModalVisible(!ptsModalVisible)}
+          data={{playTimesFree, playTimesExchange}}
+          onPressFirst={() => navigateToGame('free')}
+          onPressSecond={() => navigateToGame('exchange')}
         />
       </View>
-      <LogoutPopup
-        visible={logoutModalVisible}
-        onPressConfirm={() => {
-          setLogoutModalVisible(!logoutModalVisible);
-          navigation.popToTop();
-        }}
-        onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
-      />
-      <PlayTimesSelection
-        visible={ptsModalVisible}
-        onClose={() => setPtsModalVisible(!ptsModalVisible)}
-        data={{playTimesFree, playTimesExchange}}
-        onPressFirst={() => navigateToGame()}
-        onPressSecond={() => navigateToGame()}
-      />
     </SafeAreaView>
   );
 };
@@ -103,6 +114,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1e76e3',
+  },
+  headerContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  contentContainer: {
+    flex: 9,
+    justifyContent: 'center',
   },
   topContainer: {
     flex: 5,
