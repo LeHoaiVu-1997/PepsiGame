@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,6 +10,7 @@ import {
 import {PanGestureHandler} from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
+  runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -27,49 +28,50 @@ const SWIPEABLE_DIMENSON = BUTTON_WIDTH - 2 * BUTON_PADDING;
 // const H_WAVE_RANGE = SWIPEABLE_DIMENSON + 2 * BUTON_PADDING;
 const V_SWIPE_RANGE = BUTTON_HEIGHT - 2 * BUTON_PADDING - SWIPEABLE_DIMENSON;
 
-console.log('BUTTON_HEIGHT: ', BUTTON_HEIGHT);
-console.log('BUTTON_WIDTH: ', BUTTON_WIDTH);
-console.log('SWIPEABLE_DIMENSON: ', SWIPEABLE_DIMENSON);
-console.log('V_SWIPE_RANGE ', V_SWIPE_RANGE);
+// console.log('BUTTON_HEIGHT: ', BUTTON_HEIGHT);
+// console.log('BUTTON_WIDTH: ', BUTTON_WIDTH);
+// console.log('SWIPEABLE_DIMENSON: ', SWIPEABLE_DIMENSON);
+// console.log('V_SWIPE_RANGE ', V_SWIPE_RANGE);
 
 export interface HorizontalImageSwipeButtonProps {
-  imageSource?: any;
+  imageSource: any;
   buttonContainerStyle?: StyleProp<ViewStyle>;
-  disable?: boolean;
-  onFinish?: () => void;
+  onFinish: () => void;
 }
 
 const HorizontalImageSwipeButton: React.FC<
   HorizontalImageSwipeButtonProps
 > = props => {
-  const {imageSource, buttonContainerStyle, disable, onFinish} = props;
+  const {imageSource, buttonContainerStyle, onFinish} = props;
 
   const Y = useSharedValue(50);
-  console.log('Y: ', Y);
+  // console.log('Y: ', Y);
 
   const animatedGestureHandler = useAnimatedGestureHandler({
     onActive: e => {
       Y.value = e.translationY;
-      console.log('active Y: ', Y.value);
+      // console.log('active Y: ', Y.value);
     },
     onEnd: () => {
-      console.log(
-        'BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2: ',
-        BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2,
-      );
-      //BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2
+      // console.log(
+      //   'BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2: ',
+      //   BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2,
+      // );
 
       if (Y.value < -100) {
         Y.value = withSpring(-V_SWIPE_RANGE);
-        console.log('first Y: ', Y.value);
+        // console.log('first Y: ', Y.value);
+        runOnJS(onFinish)();
       } else {
         Y.value = withSpring(50);
-        console.log('second Y: ', Y.value);
+        // console.log('second Y: ', Y.value);
       }
     },
   });
 
-  const InterpolateYInput = [V_SWIPE_RANGE, 0];
+  const InterpolateYInput = [-V_SWIPE_RANGE - 370, 0];
+  // console.log('interpolate y input: ', InterpolateYInput);
+
   const AnimatedStyle = {
     swipeable: useAnimatedStyle(() => {
       return {
@@ -78,15 +80,17 @@ const HorizontalImageSwipeButton: React.FC<
     }),
     swipeArrow: useAnimatedStyle(() => {
       return {
-        opacity: interpolate(Y.value, InterpolateYInput, [1, 0]),
-        transform: [
-          {
-            translateY: interpolate(Y.value, InterpolateYInput, [
-              0,
-              BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON,
-            ]),
-          },
-        ],
+        // opacity: interpolate(Y.value, InterpolateYInput, [1, 0]),
+        // transform: [
+        //   {
+        //     translateY: interpolate(Y.value, InterpolateYInput, [
+        //       0,
+        //       BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON,
+        //     ]),
+        //   },
+        // ],
+        transform: [{translateY: -370 + Y.value}],
+        opacity: interpolate(-370 + Y.value, InterpolateYInput, [0, 2]),
       };
     }),
   };
@@ -95,7 +99,7 @@ const HorizontalImageSwipeButton: React.FC<
     <View style={styles.buttonContainer}>
       <PanGestureHandler onGestureEvent={animatedGestureHandler}>
         <Animated.View style={[styles.swipeAgent, AnimatedStyle.swipeable]}>
-          <Image source={HEAD} />
+          <Image source={imageSource} />
         </Animated.View>
       </PanGestureHandler>
       <Animated.View style={[AnimatedStyle.swipeArrow, styles.swipeArrow]}>
@@ -113,7 +117,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     borderRadius: BUTTON_HEIGHT,
     padding: BUTON_PADDING,
     // marginTop: windowHeight * 0.4,
