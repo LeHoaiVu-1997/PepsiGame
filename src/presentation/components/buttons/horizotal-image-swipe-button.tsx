@@ -20,7 +20,7 @@ import {HEAD, DOUBLE_ARROW_UP} from '../../../../resource/images';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const BUTTON_HEIGHT = windowHeight * 0.6;
+const BUTTON_HEIGHT = windowHeight * 0.4;
 const BUTTON_WIDTH = windowWidth * 0.2;
 const BUTON_PADDING = 10;
 const SWIPEABLE_DIMENSON = BUTTON_WIDTH - 2 * BUTON_PADDING;
@@ -44,7 +44,8 @@ const HorizontalImageSwipeButton: React.FC<
 > = props => {
   const {imageSource, buttonContainerStyle, disable, onFinish} = props;
 
-  const Y = useSharedValue(0);
+  const Y = useSharedValue(50);
+  console.log('Y: ', Y);
 
   const animatedGestureHandler = useAnimatedGestureHandler({
     onActive: e => {
@@ -56,12 +57,13 @@ const HorizontalImageSwipeButton: React.FC<
         'BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2: ',
         BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2,
       );
+      //BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2
 
-      if (Y.value < BUTTON_HEIGHT / 2 - SWIPEABLE_DIMENSON / 2) {
-        Y.value = withSpring(0);
+      if (Y.value < -100) {
+        Y.value = withSpring(-V_SWIPE_RANGE);
         console.log('first Y: ', Y.value);
       } else {
-        Y.value = withSpring(V_SWIPE_RANGE);
+        Y.value = withSpring(50);
         console.log('second Y: ', Y.value);
       }
     },
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: BUTTON_HEIGHT,
     padding: BUTON_PADDING,
-    marginTop: windowHeight * 0.3,
+    // marginTop: windowHeight * 0.4,
   },
   swipeAgent: {
     // height: SWIPEABLE_DIMENSON,
@@ -126,6 +128,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   swipeArrow: {
+    marginTop: windowHeight * 0.6,
     alignSelf: 'center',
     zIndex: 3,
   },
