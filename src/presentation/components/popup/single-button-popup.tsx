@@ -1,34 +1,20 @@
 import React from 'react';
-import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
+import {View, StyleSheet, Text, Modal, Dimensions, Image} from 'react-native';
 import RectangleButton from '../buttons/rectangle-button';
 import ImageButton from '../buttons/image-button';
-import {CLOSE_BUTTON} from '../../../../resource/images';
+import {CLOSE_BUTTON, CRY_FACE} from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export interface DoubleButtonsPopupProps {
-  onPressFirst?: () => void;
-  //   firstButtonDisable?: boolean;
-  onPressSecond?: () => void;
-  //   secondButtonDisable?: boolean;
+export interface SingleButtonsPopupProps {
+  onPress?: () => void;
   onClose?: () => void;
   visible: boolean;
-  data: any;
 }
 
-const PlayTimesSelection: React.FC<DoubleButtonsPopupProps> = props => {
-  const renderPlayTimesLeft = (times: number) => {
-    return (
-      <View style={styles.subTextContainer}>
-        <Text style={styles.subText}>{'Bạn còn '}</Text>
-        <Text style={styles.subTextHighlight}>{times}</Text>
-        <Text style={styles.subText}>{' lượt chơi'}</Text>
-      </View>
-    );
-  };
-
-  const {onPressFirst, onPressSecond, onClose, visible, data} = props;
+const OutOfPlayTime: React.FC<SingleButtonsPopupProps> = props => {
+  const {onPress, onClose, visible} = props;
   return (
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.container}>
@@ -39,32 +25,21 @@ const PlayTimesSelection: React.FC<DoubleButtonsPopupProps> = props => {
               imageSource={CLOSE_BUTTON}
               buttonContainerStyle={styles.closeButon}
             />
-            <Text style={styles.text}>{'BẠN MUỐN SỬ DỤNG LƯỢT CHƠI NÀO'}</Text>
+            <Text style={styles.textTitle}>{'BẠN ĐÃ HẾT LƯỢT!'}</Text>
+            <Text style={styles.textContent}>
+              {
+                'Hãy scan thêm mã trên bill mua nước hoặc combo Pepsi rạp để nhận thêm lượt chơi'
+              }
+            </Text>
+            <Image source={CRY_FACE} style={styles.cryfaceImage} />
           </View>
           <View style={styles.buttonsContainer}>
             <RectangleButton
-              title="Lượt chơi miễn phí"
+              title="Scan ngay"
               titleStyle={styles.textButton}
               activeStyle={styles.activeButton}
               inactiveStyle={styles.inactiveButton}
-              disabled={
-                data?.playTimesFree && data?.playTimesFree > 0 ? false : true
-              }
-              onPress={onPressFirst}
-              subComponent={renderPlayTimesLeft(data?.playTimesFree)}
-            />
-            <RectangleButton
-              title="Lượt chơi quy đổi"
-              titleStyle={styles.textButton}
-              activeStyle={styles.activeButton}
-              inactiveStyle={styles.inactiveButton}
-              disabled={
-                data?.playTimesExchange && data?.playTimesExchange > 0
-                  ? false
-                  : true
-              }
-              onPress={onPressSecond}
-              subComponent={renderPlayTimesLeft(data?.playTimesExchange)}
+              onPress={onPress}
             />
           </View>
         </View>
@@ -81,24 +56,28 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '70%',
-    height: '30%',
-    backgroundColor: '#fcd01e',
-    borderRadius: 10,
+    height: '45%',
+    backgroundColor: '#0682c9',
+    borderColor: '#debc14',
+    borderWidth: 2,
+    borderRadius: 20,
     alignItems: 'center',
   },
   textContainer: {
     marginTop: windowHeight * 0.01,
+    alignItems: 'center',
   },
-  text: {
-    color: 'red',
-    fontSize: 20,
+  textContent: {
+    color: 'white',
+    fontSize: 13,
     fontWeight: 'bold',
     marginTop: windowHeight * 0.02,
     textAlign: 'center',
+    marginHorizontal: windowWidth * 0.05,
   },
-  textBold: {
-    color: '#0063A7',
-    fontSize: 13,
+  textTitle: {
+    color: 'yellow',
+    fontSize: 20,
     fontWeight: 'bold',
   },
   buttonsContainer: {
@@ -111,6 +90,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     width: windowWidth * 0.5,
     height: windowWidth * 0.1,
+    borderWidth: 2,
+    borderColor: 'yellow',
+  },
+  cryfaceImage: {
+    marginTop: windowHeight * 0.03,
   },
   textButton: {
     fontWeight: 'bold',
@@ -122,6 +106,8 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.5,
     backgroundColor: 'grey',
     height: windowWidth * 0.1,
+    borderWidth: 2,
+    borderColor: 'yellow',
   },
   subText: {
     fontSize: 11,
@@ -138,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlayTimesSelection;
+export default OutOfPlayTime;

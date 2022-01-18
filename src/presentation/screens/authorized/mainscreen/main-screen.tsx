@@ -15,6 +15,7 @@ import LogoutPopup from '../../../components/popup/logout-popup';
 import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 import Header from '../../../components/header/header';
 import {setPlayType} from '../../../redux/slices/authorized';
+import OutOfPlayTime from '../../../components/popup/single-button-popup';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -30,6 +31,7 @@ const MainScreen: React.FC = (props: any) => {
   const dispatch = useDispatch();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [ptsModalVisible, setPtsModalVisible] = useState(false);
+  const [optModalVisible, setOptModalVisible] = useState(false);
 
   const renderPlayTimesLeft = (times: number) => {
     return (
@@ -45,6 +47,19 @@ const MainScreen: React.FC = (props: any) => {
     dispatch(setPlayType(playType));
     navigation.navigate('Game');
     setPtsModalVisible(!ptsModalVisible);
+  };
+
+  const navigateToScanCode = () => {
+    navigation.navigate('Scan code');
+    setOptModalVisible(!optModalVisible);
+  }
+
+  const selectModal = () => {
+    if (playTimesExchange > 0 || playTimesFree > 0) {
+      setPtsModalVisible(!ptsModalVisible);
+    } else {
+      setOptModalVisible(!optModalVisible);
+    }
   };
 
   return (
@@ -70,9 +85,7 @@ const MainScreen: React.FC = (props: any) => {
             subComponent={renderPlayTimesLeft(
               playTimesExchange + playTimesFree,
             )}
-            onPress={() => {
-              setPtsModalVisible(!ptsModalVisible);
-            }}
+            onPress={selectModal}
           />
           <RectangleButton
             title={'Quét mã'}
@@ -104,6 +117,11 @@ const MainScreen: React.FC = (props: any) => {
           data={{playTimesFree, playTimesExchange}}
           onPressFirst={() => navigateToGame('free')}
           onPressSecond={() => navigateToGame('exchange')}
+        />
+        <OutOfPlayTime
+          visible={optModalVisible}
+          onClose={() => setOptModalVisible(!optModalVisible)}
+          onPress={navigateToScanCode}
         />
       </View>
     </SafeAreaView>
