@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import RectangleButton from '../buttons/rectangle-button';
+import { BUTTON_WHITE } from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -38,6 +39,7 @@ const LogoutPopup: React.FC<LogoutPopup> = props => {
               activeStyle={styles.canelButton}
               disabled={false}
               onPress={onPressCanel}
+              backgroundImage={BUTTON_WHITE}
             />
           </View>
         </View>
@@ -79,8 +81,10 @@ const styles = StyleSheet.create({
     marginTop: windowHeight * 0.02,
   },
   confirmButton: {
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     width: windowWidth * 0.25,
+    height: windowHeight * 0.055,
+    marginTop: windowHeight * 0.01,
   },
   textConfirmButton: {
     fontWeight: 'bold',
@@ -90,7 +94,9 @@ const styles = StyleSheet.create({
   },
   canelButton: {
     width: windowWidth * 0.25,
-    backgroundColor: 'white',
+    height: windowHeight * 0.055,
+    marginTop: windowHeight * -0.01,
+    // backgroundColor: 'white',
   },
   textCancelButton: {
     fontWeight: 'bold',

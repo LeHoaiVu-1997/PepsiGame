@@ -1,44 +1,78 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
   SafeAreaView,
-  Text,
   Dimensions,
-  TouchableOpacity,
-  Linking,
+  ImageBackground,
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RNCamera} from 'react-native-camera';
+import Header from '../../../components/header/header';
+import LogoutPopup from '../../../components/popup/logout-popup';
+import RectangleButton from '../../../components/buttons/rectangle-button';
+import {SCREEN_SCAN} from '../../../../../resource/images';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const ScanCode: React.FC = (props: any) => {
   const {navigation} = props;
+  const [codeContent, setCodeContent] = useState(null);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [camReactivate, setCamReactivate] = useState(false);
+
+  let scanner;
+
+  console.log(camReactivate);
 
   const onSuccess = e => {
-    Linking.openURL(e.data).catch(err =>
-      console.error('An error occured', err),
-    );
+    console.log('e: ', e);
+  };
+
+  const reactivateCamera = () => {
+    // setCamReactivate(!camReactivate);
+    scanner.reactivate();
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <QRCodeScanner
-        onRead={onSuccess}
-        flashMode={RNCamera.Constants.FlashMode.torch}
-        topContent={
-          <Text style={styles.centerText}>
-            Go to{' '}
-            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-            your computer and scan the QR code.
-          </Text>
-        }
-        bottomContent={
-          <TouchableOpacity style={styles.buttonTouchable}>
-            <Text style={styles.buttonText}>OK. Got it!</Text>
-          </TouchableOpacity>
-        }
-      />
-    </SafeAreaView>
+    <View style={styles.container}>
+      <ImageBackground
+        source={SCREEN_SCAN}
+        resizeMode="cover"
+        style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Header
+            leftButtonAvailable={true}
+            onPressLeftButton={() => navigation.goBack()}
+            rightButtonAvailable={true}
+            onPressRightButton={() => {
+              setLogoutModalVisible(!logoutModalVisible);
+            }}
+          />
+        </View>
+        <View style={styles.contentContainer}>
+          <QRCodeScanner
+            ref={node => (scanner = node)}
+            onRead={onSuccess}
+            // flashMode={RNCamera.Constants.FlashMode.torch}
+            cameraStyle={styles.camStyle}
+            // showMarker={true}
+            cameraProps={{ratio: '5:3'}}
+            fadeIn={true}
+            // reactivate={true}
+          />
+          <RectangleButton title={'Quét mã'} onPress={reactivateCamera} />
+        </View>
+        <LogoutPopup
+          visible={logoutModalVisible}
+          onPressConfirm={() => {
+            setLogoutModalVisible(!logoutModalVisible);
+            navigation.popToTop();
+          }}
+          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+        />
+      </ImageBackground>
+    </View>
   );
 };
 
@@ -54,22 +88,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 9,
   },
-  centerText: {
-    flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777',
-  },
-  textBold: {
-    fontWeight: '500',
-    color: '#000',
-  },
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)',
-  },
-  buttonTouchable: {
-    padding: 16,
+  camStyle: {
+    alignSelf: 'center',
+    width: '90%',
+    marginBottom: windowHeight * 0.08,
   },
 });
 

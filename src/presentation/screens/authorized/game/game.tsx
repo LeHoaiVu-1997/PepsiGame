@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
-import {StyleSheet, SafeAreaView, View, Text, Dimensions} from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  Dimensions,
+  ImageBackground,
+} from 'react-native';
 import HorizontalImageSwipeButton from '../../../components/buttons/horizotal-image-swipe-button';
-import {HEAD} from '../../../../../resource/images';
+import {HEAD, SCREEN_GAME} from '../../../../../resource/images';
 import Header from '../../../components/header/header';
 import LogoutPopup from '../../../components/popup/logout-popup';
 import {
@@ -42,54 +49,60 @@ const Game: React.FC = (props: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Header
-          leftButtonAvailable={true}
-          onPressLeftButton={() => {
-            navigation.goBack();
-          }}
-          title={'Vuốt lên để chơi'}
-          rightButtonAvailable={true}
-          onPressRightButton={() => {
-            setLogoutModalVisible(!logoutModalVisible);
-          }}
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={styles.informationContainer}>
-          <Text style={styles.text}>{'Bạn còn '}</Text>
-          {/* <Text style={styles.textHightlight}>
+    <View style={styles.container}>
+      <ImageBackground source={SCREEN_GAME}
+        resizeMode="cover"
+        style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Header
+            leftButtonAvailable={true}
+            onPressLeftButton={() => {
+              navigation.goBack();
+            }}
+            title={'Vuốt lên để chơi'}
+            rightButtonAvailable={true}
+            onPressRightButton={() => {
+              setLogoutModalVisible(!logoutModalVisible);
+            }}
+          />
+        </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.informationContainer}>
+            <Text style={styles.text}>{'Bạn còn '}</Text>
+            {/* <Text style={styles.textHightlight}>
             {playTimesExchange + ' ' + playTimesFree}
           </Text> */}
-          <Text style={styles.textHightlight}>
-            {playType === 'free' ? playTimesFree : playTimesExchange}
-          </Text>
-          <Text style={styles.text}>{' lượt chơi '}</Text>
-          <Text style={styles.text}>
-            {playType === 'free' ? 'miễn phí' : 'quy đổi'}
-          </Text>
+            <Text style={styles.textHightlight}>
+              {playType === 'free' ? playTimesFree : playTimesExchange}
+            </Text>
+            <Text style={styles.text}>{' lượt chơi '}</Text>
+            <Text style={styles.text}>
+              {playType === 'free' ? 'miễn phí' : 'quy đổi'}
+            </Text>
+          </View>
+          <View style={styles.gameContainer}>
+            <HorizontalImageSwipeButton
+              imageSource={HEAD}
+              onFinish={onFinish}
+            />
+          </View>
         </View>
-        <View style={styles.gameContainer}>
-          <HorizontalImageSwipeButton imageSource={HEAD} onFinish={onFinish} />
-        </View>
-      </View>
-      <LogoutPopup
-        visible={logoutModalVisible}
-        onPressConfirm={() => {
-          setLogoutModalVisible(!logoutModalVisible);
-          navigation.popToTop();
-        }}
-        onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
-      />
-    </SafeAreaView>
+        <LogoutPopup
+          visible={logoutModalVisible}
+          onPressConfirm={() => {
+            setLogoutModalVisible(!logoutModalVisible);
+            navigation.popToTop();
+          }}
+          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+        />
+      </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e76e3',
   },
   headerContainer: {
     flex: 1,

@@ -8,7 +8,9 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
+  ImageBackground,
 } from 'react-native';
+import {BUTTON_RED, BUTTON_INACTIVE} from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,6 +23,7 @@ export interface IButton {
   title: string;
   titleStyle?: TextStyle;
   subComponent?: any;
+  backgroundImage?: any;
 }
 
 const RectangleButton: React.FC<IButton> = props => {
@@ -32,28 +35,41 @@ const RectangleButton: React.FC<IButton> = props => {
     title,
     titleStyle,
     subComponent,
+    backgroundImage,
   } = props;
 
   return (
-    <TouchableOpacity
-      style={
-        disabled
-          ? [styles.inactiveButton, inactiveStyle]
-          : [styles.activeButton, activeStyle]
-      }
-      onPress={onPress}
-      disabled={disabled}>
-      <Text style={titleStyle ? titleStyle : styles.title}>{title}</Text>
-      {subComponent}
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <ImageBackground
+        source={
+          disabled
+            ? BUTTON_INACTIVE
+            : backgroundImage
+            ? backgroundImage
+            : BUTTON_RED
+        }
+        resizeMode="stretch"
+        style={
+          disabled
+            ? [styles.inactiveButton, inactiveStyle]
+            : [styles.activeButton, activeStyle]
+        }>
+        <TouchableOpacity onPress={onPress} disabled={disabled}>
+          <Text style={titleStyle ? titleStyle : styles.title}>{title}</Text>
+          {subComponent}
+        </TouchableOpacity>
+      </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+  },
   activeButton: {
     width: '70%',
-    height: windowHeight * 0.035,
-    backgroundColor: '#FC3B3B',
+    height: windowHeight * 0.08,
     flexDirection: 'column',
     justifyContent: 'center',
     alignSelf: 'center',
@@ -62,8 +78,7 @@ const styles = StyleSheet.create({
   },
   inactiveButton: {
     width: '70%',
-    height: windowHeight * 0.035,
-    backgroundColor: '#8E8E8E',
+    height: windowHeight * 0.08,
     flexDirection: 'column',
     justifyContent: 'center',
     alignSelf: 'center',
@@ -74,6 +89,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 25,
     alignSelf: 'center',
+    fontWeight: 'bold',
   },
 });
 

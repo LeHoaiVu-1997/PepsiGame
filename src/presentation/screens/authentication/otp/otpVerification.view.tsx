@@ -7,9 +7,11 @@ import {
   Dimensions,
   Alert,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import RectangleButton from '../../../components/buttons/rectangle-button';
+import {SCREEN_SIGN} from '../../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -48,76 +50,81 @@ const VerifyOtp: React.FC = (props: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.fullScreenContainer}>
-      <View style={styles.greetingContainer}>
-        <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
-        <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
-      </View>
-      <View style={styles.functionContainer}>
-        <Text style={styles.textFunction}>{'Xác minh OTP'}</Text>
-        <Text style={styles.textPhoneNumber}>
-          {'Nhập mã OTP vừa được gửi đến điện thoại của bạn'}
-        </Text>
-        <KeyboardAwareScrollView>
-          <View style={styles.otpContainer}>
-            <TextInput
-              ref={passcode1Ref}
-              style={
-                wrongOtp
-                  ? styles.passcodeContainerIncorrect
-                  : styles.passcodeContainer
-              }
-              onChangeText={value => {
-                handleChange(value, 0);
-                if (value != '') passcode2Ref.current.focus();
-              }}
-              maxLength={1}
+    <View style={styles.fullScreenContainer}>
+      <ImageBackground
+        source={SCREEN_SIGN}
+        resizeMode="cover"
+        style={styles.fullScreenContainer}>
+        <View style={styles.greetingContainer}>
+          <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
+          <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
+        </View>
+        <View style={styles.functionContainer}>
+          <Text style={styles.textFunction}>{'Xác minh OTP'}</Text>
+          <Text style={styles.textPhoneNumber}>
+            {'Nhập mã OTP vừa được gửi đến điện thoại của bạn'}
+          </Text>
+          <KeyboardAwareScrollView>
+            <View style={styles.otpContainer}>
+              <TextInput
+                ref={passcode1Ref}
+                style={
+                  wrongOtp
+                    ? styles.passcodeContainerIncorrect
+                    : styles.passcodeContainer
+                }
+                onChangeText={value => {
+                  handleChange(value, 0);
+                  if (value != '') passcode2Ref.current.focus();
+                }}
+                maxLength={1}
+              />
+              <TextInput
+                ref={passcode2Ref}
+                style={
+                  wrongOtp
+                    ? styles.passcodeContainerIncorrect
+                    : styles.passcodeContainer
+                }
+                onChangeText={value => {
+                  handleChange(value, 1);
+                  if (value != '') passcode3Ref.current.focus();
+                }}
+                maxLength={1}
+              />
+              <TextInput
+                ref={passcode3Ref}
+                style={
+                  wrongOtp
+                    ? styles.passcodeContainerIncorrect
+                    : styles.passcodeContainer
+                }
+                onChangeText={value => {
+                  handleChange(value, 2);
+                  if (value != '') passcode4Ref.current.focus();
+                }}
+                maxLength={1}
+              />
+              <TextInput
+                ref={passcode4Ref}
+                style={
+                  wrongOtp
+                    ? styles.passcodeContainerIncorrect
+                    : styles.passcodeContainer
+                }
+                onChangeText={value => handleChange(value, 3)}
+                maxLength={1}
+              />
+            </View>
+            <RectangleButton
+              title={'Xác nhận'}
+              onPress={verifyOtp}
+              disabled={!codeFilled}
             />
-            <TextInput
-              ref={passcode2Ref}
-              style={
-                wrongOtp
-                  ? styles.passcodeContainerIncorrect
-                  : styles.passcodeContainer
-              }
-              onChangeText={value => {
-                handleChange(value, 1);
-                if (value != '') passcode3Ref.current.focus();
-              }}
-              maxLength={1}
-            />
-            <TextInput
-              ref={passcode3Ref}
-              style={
-                wrongOtp
-                  ? styles.passcodeContainerIncorrect
-                  : styles.passcodeContainer
-              }
-              onChangeText={value => {
-                handleChange(value, 2);
-                if (value != '') passcode4Ref.current.focus();
-              }}
-              maxLength={1}
-            />
-            <TextInput
-              ref={passcode4Ref}
-              style={
-                wrongOtp
-                  ? styles.passcodeContainerIncorrect
-                  : styles.passcodeContainer
-              }
-              onChangeText={value => handleChange(value, 3)}
-              maxLength={1}
-            />
-          </View>
-          <RectangleButton
-            title={'Xác nhận'}
-            onPress={verifyOtp}
-            disabled={!codeFilled}
-          />
-        </KeyboardAwareScrollView>
-      </View>
-    </SafeAreaView>
+          </KeyboardAwareScrollView>
+        </View>
+      </ImageBackground>
+    </View>
   );
 };
 
@@ -130,13 +137,13 @@ const styles = StyleSheet.create({
   },
   greetingContainer: {
     flex: 25,
-    backgroundColor: '#035efc',
+    // backgroundColor: '#035efc',
     paddingTop: windowHeight * 0.1,
     alignItems: 'center',
   },
   functionContainer: {
     flex: 75,
-    backgroundColor: '#035efc',
+    // backgroundColor: '#035efc',
     paddingHorizontal: windowWidth * 0.05,
   },
   textWelcome: {

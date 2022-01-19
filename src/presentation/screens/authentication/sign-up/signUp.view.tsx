@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TextInputField from '../../../components/inputs/TextInputField';
@@ -14,6 +15,7 @@ import TextButton from '../../../components/buttons/text-button';
 import CheckBox from '@react-native-community/checkbox';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {BUTTON_WHITE, SCREEN_SIGN} from '../../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -45,78 +47,84 @@ const SignUp: React.FC = (props: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.fullScreenContainer}>
-      <View style={styles.greetingContainer}>
-        <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
-        <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
-      </View>
-      <View style={styles.functionContainer}>
-        <Text style={styles.textFunction}>{'Đăng ký'}</Text>
-        <Formik
-          initialValues={{phoneNumber: '', userName: ''}}
-          validationSchema={signInSchema}
-          onSubmit={values => {
-            // Alert.alert(
-            //   `You signed up with information: ${values.phoneNumber} and ${values.userName}`,
-            // );
-            navigation.navigate('VerifyOTP');
-          }}>
-          {formik => (
-            <KeyboardAwareScrollView>
-              <TextInputField
-                errorLabel={formik.errors.phoneNumber}
-                placeholder="Nhập số điện thoại"
-                numKeyboard={true}
-                inputProps={{
-                  value: formik.values.phoneNumber,
-                  onChangeText: (value: string) => {
-                    formik.setFieldValue('phoneNumber', value, true);
-                  },
-                }}
-              />
-              <TextInputField
-                errorLabel={formik.errors.userName}
-                placeholder="Nhập họ tên"
-                inputProps={{
-                  value: formik.values.userName,
-                  onChangeText: (value: string) => {
-                    formik.setFieldValue('userName', value, true);
-                  },
-                }}
-              />
-              <View style={styles.checkboxContainer}>
-                <CheckBox
-                  value={termRead}
-                  onValueChange={() => setTermRead(!termRead)}
-                  boxType={'square'}
-                  onFillColor={'white'}
+    <View style={styles.fullScreenContainer}>
+      <ImageBackground
+        source={SCREEN_SIGN}
+        resizeMode="cover"
+        style={styles.fullScreenContainer}>
+        <View style={styles.greetingContainer}>
+          <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
+          <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
+        </View>
+        <View style={styles.functionContainer}>
+          <Text style={styles.textFunction}>{'Đăng ký'}</Text>
+          <Formik
+            initialValues={{phoneNumber: '', userName: ''}}
+            validationSchema={signInSchema}
+            onSubmit={values => {
+              // Alert.alert(
+              //   `You signed up with information: ${values.phoneNumber} and ${values.userName}`,
+              // );
+              navigation.navigate('VerifyOTP');
+            }}>
+            {formik => (
+              <KeyboardAwareScrollView>
+                <TextInputField
+                  errorLabel={formik.errors.phoneNumber}
+                  placeholder="Nhập số điện thoại"
+                  numKeyboard={true}
+                  inputProps={{
+                    value: formik.values.phoneNumber,
+                    onChangeText: (value: string) => {
+                      formik.setFieldValue('phoneNumber', value, true);
+                    },
+                  }}
                 />
-                <Text style={styles.checkboxText}>
-                  {'Tôi đã đọc và đồng ý với'}
-                </Text>
-                <TextButton
-                  title=" thể lệ chương trình "
-                  onPress={() => navigation.navigate('Term of Service')}
+                <TextInputField
+                  errorLabel={formik.errors.userName}
+                  placeholder="Nhập họ tên"
+                  inputProps={{
+                    value: formik.values.userName,
+                    onChangeText: (value: string) => {
+                      formik.setFieldValue('userName', value, true);
+                    },
+                  }}
                 />
-                <Text style={styles.checkboxText}>{'Pepsi Tết'}</Text>
-              </View>
-              <RectangleButton
-                onPress={formik.submitForm}
-                title="Lấy mã OTP"
-                disabled={isAllTrue(!termRead, !formik.isValid)}
-              />
-              <Text style={styles.textOr}>{'Hoặc'}</Text>
-              <RectangleButton
-                title="Đăng nhập"
-                titleStyle={styles.titleSignUp}
-                activeStyle={styles.buttonSignUp}
-                onPress={() => navigation.navigate('Sign in')}
-              />
-            </KeyboardAwareScrollView>
-          )}
-        </Formik>
-      </View>
-    </SafeAreaView>
+                <View style={styles.checkboxContainer}>
+                  <CheckBox
+                    value={termRead}
+                    onValueChange={() => setTermRead(!termRead)}
+                    boxType={'square'}
+                    onFillColor={'white'}
+                  />
+                  <Text style={styles.checkboxText}>
+                    {'Tôi đã đọc và đồng ý với'}
+                  </Text>
+                  <TextButton
+                    title=" thể lệ chương trình "
+                    onPress={() => navigation.navigate('Term of Service')}
+                  />
+                  <Text style={styles.checkboxText}>{'Pepsi Tết'}</Text>
+                </View>
+                <RectangleButton
+                  onPress={formik.submitForm}
+                  title="Lấy mã OTP"
+                  disabled={isAllTrue(!termRead, !formik.isValid)}
+                />
+                <Text style={styles.textOr}>{'Hoặc'}</Text>
+                <RectangleButton
+                  title="Đăng nhập"
+                  titleStyle={styles.titleSignUp}
+                  activeStyle={styles.buttonSignUp}
+                  onPress={() => navigation.navigate('Sign in')}
+                  backgroundImage={BUTTON_WHITE}
+                />
+              </KeyboardAwareScrollView>
+            )}
+          </Formik>
+        </View>
+      </ImageBackground>
+    </View>
   );
 };
 
@@ -129,13 +137,13 @@ const styles = StyleSheet.create({
   },
   greetingContainer: {
     flex: 25,
-    backgroundColor: '#035efc',
+    // backgroundColor: '#035efc',
     paddingTop: windowHeight * 0.1,
     alignItems: 'center',
   },
   functionContainer: {
     flex: 75,
-    backgroundColor: '#035efc',
+    // backgroundColor: '#035efc',
     paddingHorizontal: windowWidth * 0.05,
   },
   textWelcome: {
@@ -160,17 +168,17 @@ const styles = StyleSheet.create({
   },
   buttonSignUp: {
     width: '70%',
-    height: windowHeight * 0.035,
-    backgroundColor: 'white',
+    height: windowHeight * 0.08,
     flexDirection: 'column',
     justifyContent: 'center',
     alignSelf: 'center',
     marginVertical: windowHeight * 0.01,
   },
   titleSignUp: {
-    color: '#0063A7',
+    color: '#3486eb',
     fontSize: 25,
     alignSelf: 'center',
+    fontWeight: 'bold',
   },
   checkboxContainer: {
     flexDirection: 'row',

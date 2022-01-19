@@ -7,11 +7,17 @@ import {
   Dimensions,
   Image,
   Alert,
+  ImageBackground,
 } from 'react-native';
-import {THREECANONE} from '../../../../../resource/images';
+import {
+  THREECANONE,
+  BUTTON_RED,
+  BUTTON_WHITE,
+} from '../../../../../resource/images';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TextInputField from '../../../components/inputs/TextInputField';
 import RectangleButton from '../../../components/buttons/rectangle-button';
+import {SCREEN_SIGN} from '../../../../../resource/images';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 
@@ -32,77 +38,83 @@ const signInSchema = Yup.object({
 const SignIn: React.FC = (props: any) => {
   const {navigation} = props;
   return (
-    <SafeAreaView style={styles.fullScreenContainer}>
-      <View style={styles.greetingContainer}>
-        <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
-        <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
-      </View>
-      <View style={styles.functionContainer}>
-        <Text style={styles.textFunction}>{'Đăng nhập'}</Text>
-        <Text style={styles.textPhoneNumber}>{'Số điện thoại'}</Text>
-        <Formik
-          initialValues={{phoneNumber: ''}}
-          validationSchema={signInSchema}
-          onSubmit={values => {
-            // Alert.alert(
-            //   `You signed in with information: ${values.phoneNumber}`,
-            // );
-            navigation.navigate('VerifyOTP');
-          }}>
-          {formik => (
-            <KeyboardAwareScrollView>
-              <TextInputField
-                errorLabel={formik.errors.phoneNumber}
-                placeholder="Nhập số điện thoại"
-                numKeyboard={true}
-                inputProps={{
-                  value: formik.values.phoneNumber,
-                  onChangeText: (value: string) => {
-                    formik.setFieldValue('phoneNumber', value, true);
-                  },
-                }}
-              />
-              <Image
-                source={THREECANONE}
-                resizeMode="contain"
-                style={styles.image}
-              />
-              <RectangleButton
-                onPress={formik.submitForm}
-                title="Lấy mã OTP"
-                disabled={!formik.isValid}
-              />
-              <Text style={styles.textOr}>{'Hoặc'}</Text>
-              <RectangleButton
-                title="Đăng kí"
-                titleStyle={styles.titleSignUp}
-                activeStyle={styles.buttonSignUp}
-                onPress={() => navigation.navigate('Sign up')}
-              />
-            </KeyboardAwareScrollView>
-          )}
-        </Formik>
-      </View>
-    </SafeAreaView>
+    <View style={styles.fullScreenContainer}>
+      <ImageBackground
+        source={SCREEN_SIGN}
+        resizeMode="cover"
+        style={styles.fullScreenContainer}>
+        <View style={styles.greetingContainer}>
+          <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
+          <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
+        </View>
+        <View style={styles.functionContainer}>
+          <Text style={styles.textFunction}>{'Đăng nhập'}</Text>
+          <Text style={styles.textPhoneNumber}>{'Số điện thoại'}</Text>
+          <Formik
+            initialValues={{phoneNumber: ''}}
+            validationSchema={signInSchema}
+            onSubmit={values => {
+              // Alert.alert(
+              //   `You signed in with information: ${values.phoneNumber}`,
+              // );
+              navigation.navigate('VerifyOTP');
+            }}>
+            {formik => (
+              <KeyboardAwareScrollView>
+                <TextInputField
+                  errorLabel={formik.errors.phoneNumber}
+                  placeholder="Nhập số điện thoại"
+                  numKeyboard={true}
+                  inputProps={{
+                    value: formik.values.phoneNumber,
+                    onChangeText: (value: string) => {
+                      formik.setFieldValue('phoneNumber', value, true);
+                    },
+                  }}
+                />
+                <Image
+                  source={THREECANONE}
+                  resizeMode="contain"
+                  style={styles.image}
+                />
+                <RectangleButton
+                  onPress={formik.submitForm}
+                  title="Lấy mã OTP"
+                  disabled={!formik.isValid}
+                  backgroundImage={BUTTON_RED}
+                />
+                <Text style={styles.textOr}>{'Hoặc'}</Text>
+                <RectangleButton
+                  title="Đăng kí"
+                  titleStyle={styles.titleSignUp}
+                  activeStyle={styles.buttonSignUp}
+                  onPress={() => navigation.navigate('Sign up')}
+                  backgroundImage={BUTTON_WHITE}
+                />
+              </KeyboardAwareScrollView>
+            )}
+          </Formik>
+        </View>
+      </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
-    // backgroundColor: '#035efc',
     borderRadius: 20,
     flexDirection: 'column',
   },
   greetingContainer: {
     flex: 25,
-    backgroundColor: '#035efc',
+    // backgroundColor: '#035efc',
     paddingTop: windowHeight * 0.1,
     alignItems: 'center',
   },
   functionContainer: {
     flex: 75,
-    backgroundColor: '#035efc',
+    // backgroundColor: '#035efc',
     paddingHorizontal: windowWidth * 0.05,
   },
   textWelcome: {
@@ -129,18 +141,20 @@ const styles = StyleSheet.create({
   textOr: {
     color: 'white',
     alignSelf: 'center',
+    fontWeight: 'bold',
+    marginTop: -windowHeight * 0.015,
   },
   image: {
     alignSelf: 'center',
   },
   buttonSignUp: {
     width: '70%',
-    height: windowHeight * 0.035,
-    backgroundColor: 'white',
+    height: windowHeight * 0.08,
+    // backgroundColor: 'white',
     flexDirection: 'column',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginVertical: windowHeight * 0.01,
+    // marginVertical: windowHeight * 0.01,
   },
   titleSignUp: {
     color: '#0063A7',

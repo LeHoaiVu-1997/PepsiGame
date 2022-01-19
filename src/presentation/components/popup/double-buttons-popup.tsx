@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import RectangleButton from '../buttons/rectangle-button';
 import ImageButton from '../buttons/image-button';
-import {CLOSE_BUTTON} from '../../../../resource/images';
+import {CLOSE_BUTTON, BUTTON_RED} from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -108,9 +108,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   activeButton: {
-    backgroundColor: 'red',
-    width: windowWidth * 0.5,
-    height: windowWidth * 0.1,
+    // backgroundColor: 'red',
+    width: windowWidth * 0.6,
+    height: windowWidth * 0.2,
+    marginTop: -windowHeight * 0.015,
   },
   textButton: {
     fontWeight: 'bold',
@@ -119,9 +120,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inactiveButton: {
-    width: windowWidth * 0.5,
-    backgroundColor: 'grey',
-    height: windowWidth * 0.1,
+    width: windowWidth * 0.6,
+    // backgroundColor: 'grey',
+    height: windowWidth * 0.2,
+    marginTop: -windowHeight * 0.015,
   },
   subText: {
     fontSize: 11,

@@ -6,11 +6,17 @@ import {
   StyleSheet,
   Dimensions,
   Image,
+  ImageBackground,
 } from 'react-native';
 import {RootState} from '../../../redux/store';
 import {useSelector, useDispatch} from 'react-redux';
 import RectangleButton from '../../../components/buttons/rectangle-button';
-import {HEAD} from '../../../../../resource/images';
+import {
+  BUTTON_WHITE,
+  HEAD,
+  SCREEN_MAIN,
+  BUTTON_PLAY_NOW,
+} from '../../../../../resource/images';
 import LogoutPopup from '../../../components/popup/logout-popup';
 import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 import Header from '../../../components/header/header';
@@ -52,7 +58,7 @@ const MainScreen: React.FC = (props: any) => {
   const navigateToScanCode = () => {
     navigation.navigate('Scan code');
     setOptModalVisible(!optModalVisible);
-  }
+  };
 
   const selectModal = () => {
     if (playTimesExchange > 0 || playTimesFree > 0) {
@@ -63,75 +69,85 @@ const MainScreen: React.FC = (props: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Header
-          leftButtonAvailable={false}
-          rightButtonAvailable={true}
-          onPressRightButton={() => {
-            setLogoutModalVisible(!logoutModalVisible);
-          }}
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={styles.topContainer}>
-          <Image style={styles.headImage} source={HEAD} />
-        </View>
-        <View style={styles.bottomContainer}>
-          <Text style={styles.textInstruction}>{'Hướng dẫn'}</Text>
-          <RectangleButton
-            title={'Chơi ngay'}
-            activeStyle={styles.buttonRed}
-            subComponent={renderPlayTimesLeft(
-              playTimesExchange + playTimesFree,
-            )}
-            onPress={selectModal}
-          />
-          <RectangleButton
-            title={'Quét mã'}
-            activeStyle={styles.buttonWhite}
-            titleStyle={styles.textButton}
-          />
-          <RectangleButton
-            title={'Bộ sưu tập'}
-            activeStyle={styles.buttonWhite}
-            titleStyle={styles.textButton}
-          />
-          <RectangleButton
-            title={'Chi tiết quà tặng'}
-            activeStyle={styles.buttonWhite}
-            titleStyle={styles.textButton}
+    <View style={styles.container}>
+      <ImageBackground
+        source={SCREEN_MAIN}
+        resizeMode="cover"
+        style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Header
+            leftButtonAvailable={false}
+            rightButtonAvailable={true}
+            onPressRightButton={() => {
+              setLogoutModalVisible(!logoutModalVisible);
+            }}
           />
         </View>
-        <LogoutPopup
-          visible={logoutModalVisible}
-          onPressConfirm={() => {
-            setLogoutModalVisible(!logoutModalVisible);
-            navigation.popToTop();
-          }}
-          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
-        />
-        <PlayTimesSelection
-          visible={ptsModalVisible}
-          onClose={() => setPtsModalVisible(!ptsModalVisible)}
-          data={{playTimesFree, playTimesExchange}}
-          onPressFirst={() => navigateToGame('free')}
-          onPressSecond={() => navigateToGame('exchange')}
-        />
-        <OutOfPlayTime
-          visible={optModalVisible}
-          onClose={() => setOptModalVisible(!optModalVisible)}
-          onPress={navigateToScanCode}
-        />
-      </View>
-    </SafeAreaView>
+        <View style={styles.contentContainer}>
+          <View style={styles.topContainer}>
+            <Image style={styles.headImage} source={HEAD} />
+          </View>
+          <View style={styles.bottomContainer}>
+            <Text style={styles.textInstruction}>{'Hướng dẫn'}</Text>
+            <RectangleButton
+              title={'Chơi ngay'}
+              activeStyle={styles.buttonRed}
+              subComponent={renderPlayTimesLeft(
+                playTimesExchange + playTimesFree,
+              )}
+              onPress={selectModal}
+              backgroundImage={BUTTON_PLAY_NOW}
+            />
+            <RectangleButton
+              title={'Quét mã'}
+              activeStyle={styles.buttonWhite}
+              titleStyle={styles.textButton}
+              onPress={() => navigation.navigate('Scan code')}
+              backgroundImage={BUTTON_WHITE}
+            />
+            <RectangleButton
+              title={'Bộ sưu tập'}
+              activeStyle={styles.buttonWhite}
+              titleStyle={styles.textButton}
+              backgroundImage={BUTTON_WHITE}
+            />
+            <RectangleButton
+              title={'Chi tiết quà tặng'}
+              activeStyle={styles.buttonWhite}
+              titleStyle={styles.textButton}
+              backgroundImage={BUTTON_WHITE}
+            />
+          </View>
+          <LogoutPopup
+            visible={logoutModalVisible}
+            onPressConfirm={() => {
+              setLogoutModalVisible(!logoutModalVisible);
+              navigation.popToTop();
+            }}
+            onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+          />
+          <PlayTimesSelection
+            visible={ptsModalVisible}
+            onClose={() => setPtsModalVisible(!ptsModalVisible)}
+            data={{playTimesFree, playTimesExchange}}
+            onPressFirst={() => navigateToGame('free')}
+            onPressSecond={() => navigateToGame('exchange')}
+          />
+          <OutOfPlayTime
+            visible={optModalVisible}
+            onClose={() => setOptModalVisible(!optModalVisible)}
+            onPress={navigateToScanCode}
+          />
+        </View>
+      </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e76e3',
+    // backgroundColor: '#1e76e3',
   },
   headerContainer: {
     flex: 1,
@@ -142,10 +158,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   topContainer: {
-    flex: 5,
+    flex: 4,
   },
   bottomContainer: {
-    flex: 5,
+    flex: 6,
   },
   textInstruction: {
     color: '#e3c91e',
@@ -168,20 +184,23 @@ const styles = StyleSheet.create({
     marginTop: windowHeight * 0.01,
   },
   buttonRed: {
-    backgroundColor: 'red',
-    height: windowHeight * 0.06,
+    height: windowHeight * 0.1,
     width: '70%',
     borderRadius: 5,
+    // borderColor: 'white',
+    // borderWidth: 1,
   },
   buttonWhite: {
-    backgroundColor: 'white',
-    height: windowHeight * 0.05,
+    marginTop: -windowHeight * 0.01,
+    height: windowHeight * 0.08,
     width: '70%',
     borderRadius: 5,
+    // borderColor: 'red',
+    // borderWidth: 1,
   },
   headImage: {
     alignSelf: 'center',
-    marginTop: windowHeight * 0.08,
+    marginTop: windowHeight * 0.035,
   },
   textButton: {
     fontSize: 18,
