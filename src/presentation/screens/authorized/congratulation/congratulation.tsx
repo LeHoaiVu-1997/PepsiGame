@@ -50,7 +50,7 @@ const Congratulation: React.FC = (props: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e76e3',
+    // backgroundColor: '#1e76e3',
   },
   headerContainer: {
     flex: 1,

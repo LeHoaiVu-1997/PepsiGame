@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   Dimensions,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import Header from '../../../components/header/header';
@@ -26,7 +27,8 @@ const ScanCode: React.FC = (props: any) => {
   console.log(camReactivate);
 
   const onSuccess = e => {
-    console.log('e: ', e);
+    let data = e.data;
+    Alert.alert('Mã QR code có nội dung: ', data);
   };
 
   const reactivateCamera = () => {
