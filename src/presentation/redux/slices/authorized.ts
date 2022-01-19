@@ -20,7 +20,7 @@ const authorizedSlice = createSlice({
       state.play_times_free += 1;
     },
     decrementFree: state => {
-      if (state.play_times_exchange > 0) {
+      if (state.play_times_free > 0) {
         state.play_times_free -= 1;
       }
     },
