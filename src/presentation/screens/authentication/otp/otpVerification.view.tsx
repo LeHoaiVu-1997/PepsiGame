@@ -12,20 +12,27 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import RectangleButton from '../../../components/buttons/rectangle-button';
 import {SCREEN_SIGN} from '../../../../../resource/images';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const VerifyOtp: React.FC = (props: any) => {
   const {navigation} = props;
-  const [otp, setOtp] = useState(new Array(4).fill(''));
+  const [otp, setOtp] = useState(new Array(6).fill(''));
   const [wrongOtp, setWrongOtp] = useState(false);
   const [codeFilled, setCodeFilled] = useState(false);
+  const confirm = useSelector(
+    (state: RootState) => state.authentication.confirm,
+  );
+
   const passcode1Ref = useRef();
   const passcode2Ref = useRef();
   const passcode3Ref = useRef();
   const passcode4Ref = useRef();
-  //   const passcodeRefs = useRef([true, false, false, false]);
+  const passcode5Ref = useRef();
+  const passcode6Ref = useRef();
 
   const checkCodeFilled = otpCode => {
     let notFilled = otpCode.filter(item => item === '');
@@ -44,9 +51,13 @@ const VerifyOtp: React.FC = (props: any) => {
     checkCodeFilled(newOtp);
   };
 
-  const verifyOtp = () => {
-    // Alert.alert('You pressed otp: ', otp.join(''));
-    navigation.navigate('Main screen');
+  const verifyOtp = async () => {
+    try {
+      await confirm.confirm(otp.join(''));
+      navigation.navigate('Main screen');
+    } catch (error) {
+      setWrongOtp(true);
+    }
   };
 
   return (
@@ -61,8 +72,10 @@ const VerifyOtp: React.FC = (props: any) => {
         </View>
         <View style={styles.functionContainer}>
           <Text style={styles.textFunction}>{'Xác minh OTP'}</Text>
-          <Text style={styles.textPhoneNumber}>
-            {'Nhập mã OTP vừa được gửi đến điện thoại của bạn'}
+          <Text style={styles.textInstruction}>
+            {wrongOtp
+              ? 'Mã OTP không đúng, vui lòng nhập lại!'
+              : 'Nhập mã OTP vừa được gửi đến điện thoại của bạn'}
           </Text>
           <KeyboardAwareScrollView>
             <View style={styles.otpContainer}>
@@ -78,6 +91,7 @@ const VerifyOtp: React.FC = (props: any) => {
                   if (value != '') passcode2Ref.current.focus();
                 }}
                 maxLength={1}
+                keyboardType="number-pad"
               />
               <TextInput
                 ref={passcode2Ref}
@@ -91,6 +105,7 @@ const VerifyOtp: React.FC = (props: any) => {
                   if (value != '') passcode3Ref.current.focus();
                 }}
                 maxLength={1}
+                keyboardType="number-pad"
               />
               <TextInput
                 ref={passcode3Ref}
@@ -104,6 +119,7 @@ const VerifyOtp: React.FC = (props: any) => {
                   if (value != '') passcode4Ref.current.focus();
                 }}
                 maxLength={1}
+                keyboardType="number-pad"
               />
               <TextInput
                 ref={passcode4Ref}
@@ -112,15 +128,46 @@ const VerifyOtp: React.FC = (props: any) => {
                     ? styles.passcodeContainerIncorrect
                     : styles.passcodeContainer
                 }
-                onChangeText={value => handleChange(value, 3)}
+                onChangeText={value => {
+                  handleChange(value, 3);
+                  if (value != '') passcode5Ref.current.focus();
+                }}
                 maxLength={1}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                ref={passcode5Ref}
+                style={
+                  wrongOtp
+                    ? styles.passcodeContainerIncorrect
+                    : styles.passcodeContainer
+                }
+                onChangeText={value => {
+                  handleChange(value, 4);
+                  if (value != '') passcode6Ref.current.focus();
+                }}
+                maxLength={1}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                ref={passcode6Ref}
+                style={
+                  wrongOtp
+                    ? styles.passcodeContainerIncorrect
+                    : styles.passcodeContainer
+                }
+                onChangeText={value => handleChange(value, 5)}
+                maxLength={1}
+                keyboardType="number-pad"
               />
             </View>
-            <RectangleButton
-              title={'Xác nhận'}
-              onPress={verifyOtp}
-              disabled={!codeFilled}
-            />
+            <View style={{marginTop: windowHeight * 0.035}}>
+              <RectangleButton
+                title={'Xác nhận'}
+                onPress={verifyOtp}
+                disabled={!codeFilled}
+              />
+            </View>
           </KeyboardAwareScrollView>
         </View>
       </ImageBackground>
@@ -154,10 +201,10 @@ const styles = StyleSheet.create({
   otpContainer: {
     flexDirection: 'row',
     alignContent: 'stretch',
-    width: '70%',
+    width: '90%',
     alignSelf: 'center',
     justifyContent: 'space-between',
-    marginTop: windowHeight * 0.01,
+    marginTop: windowHeight * 0.05,
   },
   passcodeContainer: {
     width: windowWidth * 0.12,
@@ -173,6 +220,7 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     backgroundColor: 'white',
     borderRadius: 5,
+    textAlign: 'center',
   },
   textTitle: {
     fontSize: 40,
@@ -180,13 +228,13 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   textFunction: {
-    fontSize: 20,
-    fontWeight: '400',
+    fontSize: 25,
+    fontWeight: 'bold',
     color: 'white',
     alignSelf: 'center',
   },
-  textPhoneNumber: {
-    fontSize: 12,
+  textInstruction: {
+    fontSize: 14,
     fontWeight: '400',
     color: 'white',
     alignSelf: 'center',

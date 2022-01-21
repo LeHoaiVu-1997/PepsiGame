@@ -20,6 +20,9 @@ import RectangleButton from '../../../components/buttons/rectangle-button';
 import {SCREEN_SIGN} from '../../../../../resource/images';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import auth from '@react-native-firebase/auth';
+import {useDispatch} from 'react-redux';
+import {saveConfirm} from '../../../redux/slices/authentication';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -37,6 +40,15 @@ const signInSchema = Yup.object({
 
 const SignIn: React.FC = (props: any) => {
   const {navigation} = props;
+
+  const dispatch = useDispatch();
+
+  const signInWithPhoneNumber = async (phoneNumber: string) => {
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    dispatch(saveConfirm(confirmation));
+    navigation.navigate('VerifyOTP');
+  };
+
   return (
     <View style={styles.fullScreenContainer}>
       <ImageBackground
@@ -54,10 +66,8 @@ const SignIn: React.FC = (props: any) => {
             initialValues={{phoneNumber: ''}}
             validationSchema={signInSchema}
             onSubmit={values => {
-              // Alert.alert(
-              //   `You signed in with information: ${values.phoneNumber}`,
-              // );
-              navigation.navigate('VerifyOTP');
+              // navigation.navigate('VerifyOTP');
+              signInWithPhoneNumber('+84971721198');
             }}>
             {formik => (
               <KeyboardAwareScrollView>
