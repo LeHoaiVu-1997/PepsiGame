@@ -16,6 +16,9 @@ import CheckBox from '@react-native-community/checkbox';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {BUTTON_WHITE, SCREEN_SIGN} from '../../../../../resource/images';
+import {useDispatch} from 'react-redux';
+import {saveConfirm} from '../../../redux/slices/authentication';
+import auth from '@react-native-firebase/auth';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -38,12 +41,19 @@ const signInSchema = Yup.object({
 const SignUp: React.FC = (props: any) => {
   const {navigation} = props;
   const [termRead, setTermRead] = useState(false);
+  const dispatch = useDispatch();
 
   const isAllTrue = (isTermRead: boolean, formikValid: boolean) => {
     if (isTermRead === true || formikValid === true) {
       return true;
     }
     return false;
+  };
+
+  const signUp = async (phoneNumber: string) => {
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    dispatch(saveConfirm(confirmation));
+    navigation.navigate('VerifyOTP');
   };
 
   return (
@@ -62,10 +72,7 @@ const SignUp: React.FC = (props: any) => {
             initialValues={{phoneNumber: '', userName: ''}}
             validationSchema={signInSchema}
             onSubmit={values => {
-              // Alert.alert(
-              //   `You signed up with information: ${values.phoneNumber} and ${values.userName}`,
-              // );
-              navigation.navigate('VerifyOTP');
+              signUp('+84971721198');
             }}>
             {formik => (
               <KeyboardAwareScrollView>

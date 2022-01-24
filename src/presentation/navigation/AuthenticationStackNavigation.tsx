@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 
 export const AuthenticationNavigatior: React.FC = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Sign in" component={SignIn} />
       <Stack.Screen name="Sign up" component={SignUp} />
       <Stack.Screen name="Term of Service" component={TermOfService} />

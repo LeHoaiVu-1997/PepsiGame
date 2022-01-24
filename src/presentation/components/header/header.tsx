@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'stretch',
     flexDirection: 'row',
-    marginTop: windowHeight * 0.03,
+    marginTop: windowHeight * 0.05,
+    // paddingTop: windowHeight * 0.05,
   },
   gobackContainer: {
     flex: 1,

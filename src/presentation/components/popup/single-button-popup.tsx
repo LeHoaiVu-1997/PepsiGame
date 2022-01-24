@@ -1,8 +1,21 @@
 import React from 'react';
-import {View, StyleSheet, Text, Modal, Dimensions, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Modal,
+  Dimensions,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import RectangleButton from '../buttons/rectangle-button';
 import ImageButton from '../buttons/image-button';
-import {CLOSE_BUTTON, CRY_FACE} from '../../../../resource/images';
+import {
+  CLOSE_BUTTON,
+  CRY_FACE,
+  POPUP_PLAY_TIME_OVER,
+  BUTTON_SCAN_NOW,
+} from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -11,37 +24,45 @@ export interface SingleButtonsPopupProps {
   onPress?: () => void;
   onClose?: () => void;
   visible: boolean;
+  backgroundImage?: any;
 }
 
 const OutOfPlayTime: React.FC<SingleButtonsPopupProps> = props => {
-  const {onPress, onClose, visible} = props;
+  const {onPress, onClose, visible, backgroundImage} = props;
   return (
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.container}>
         <View style={styles.modalContent}>
-          <View style={styles.textContainer}>
-            <ImageButton
-              onPress={onClose}
-              imageSource={CLOSE_BUTTON}
-              buttonContainerStyle={styles.closeButon}
-            />
-            <Text style={styles.textTitle}>{'BẠN ĐÃ HẾT LƯỢT!'}</Text>
-            <Text style={styles.textContent}>
-              {
-                'Hãy scan thêm mã trên bill mua nước hoặc combo Pepsi rạp để nhận thêm lượt chơi'
-              }
-            </Text>
-            <Image source={CRY_FACE} style={styles.cryfaceImage} />
-          </View>
-          <View style={styles.buttonsContainer}>
-            <RectangleButton
-              title="Scan ngay"
-              titleStyle={styles.textButton}
-              activeStyle={styles.activeButton}
-              inactiveStyle={styles.inactiveButton}
-              onPress={onPress}
-            />
-          </View>
+          <ImageBackground
+            source={backgroundImage ? backgroundImage : POPUP_PLAY_TIME_OVER}
+            resizeMode="cover"
+            style={styles.modalContent}
+            imageStyle={styles.imageBackgorund}>
+            <View style={styles.textContainer}>
+              <ImageButton
+                onPress={onClose}
+                imageSource={CLOSE_BUTTON}
+                buttonContainerStyle={styles.closeButon}
+              />
+              <Text style={styles.textTitle}>{'BẠN ĐÃ HẾT LƯỢT!'}</Text>
+              <Text style={styles.textContent}>
+                {
+                  'Hãy scan thêm mã trên bill mua nước hoặc combo Pepsi rạp để nhận thêm lượt chơi'
+                }
+              </Text>
+              <Image source={CRY_FACE} style={styles.cryfaceImage} />
+            </View>
+            <View style={styles.buttonsContainer}>
+              <RectangleButton
+                title="Scan ngay"
+                backgroundImage={BUTTON_SCAN_NOW}
+                titleStyle={styles.textButton}
+                activeStyle={styles.activeButton}
+                inactiveStyle={styles.inactiveButton}
+                onPress={onPress}
+              />
+            </View>
+          </ImageBackground>
         </View>
       </View>
     </Modal>
@@ -55,13 +76,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '70%',
-    height: '45%',
-    backgroundColor: '#0682c9',
-    borderColor: '#debc14',
+    width: windowWidth * 0.7,
+    height: windowHeight * 0.45,
+    alignItems: 'center',
+  },
+  imageBackgorund: {
     borderWidth: 2,
     borderRadius: 20,
-    alignItems: 'center',
+    borderColor: '#debc14',
   },
   textContainer: {
     marginTop: windowHeight * 0.01,
@@ -85,13 +107,14 @@ const styles = StyleSheet.create({
   },
   closeButon: {
     alignSelf: 'flex-end',
+    marginRight: windowWidth * 0.02,
   },
   activeButton: {
-    backgroundColor: 'red',
-    width: windowWidth * 0.5,
-    height: windowWidth * 0.1,
-    borderWidth: 2,
-    borderColor: 'yellow',
+    // backgroundColor: 'red',
+    width: windowWidth * 0.45,
+    height: windowWidth * 0.12,
+    // borderWidth: 2,
+    // borderColor: 'yellow',
   },
   cryfaceImage: {
     marginTop: windowHeight * 0.03,
@@ -104,10 +127,10 @@ const styles = StyleSheet.create({
   },
   inactiveButton: {
     width: windowWidth * 0.5,
-    backgroundColor: 'grey',
+    // backgroundColor: 'grey',
     height: windowWidth * 0.1,
-    borderWidth: 2,
-    borderColor: 'yellow',
+    // borderWidth: 2,
+    // borderColor: 'yellow',
   },
   subText: {
     fontSize: 11,
