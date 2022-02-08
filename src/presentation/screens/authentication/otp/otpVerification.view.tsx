@@ -34,6 +34,22 @@ const VerifyOtp: React.FC = (props: any) => {
   const passcode5Ref = useRef();
   const passcode6Ref = useRef();
 
+  // const name = useSelector((state: RootState) => state.authorized.name);
+  // const phone = useSelector(
+  //   (state: RootState) => state.authorized.phone_number,
+  // );
+  // const free = useSelector(
+  //   (state: RootState) => state.authorized.play_times_free,
+  // );
+  // const exchange = useSelector(
+  //   (state: RootState) => state.authorized.play_times_exchange,
+  // );
+
+  // console.log('name: ', name);
+  // console.log('phone: ', phone);
+  // console.log('free: ', free);
+  // console.log('exchange: ', exchange);
+
   const checkCodeFilled = otpCode => {
     let notFilled = otpCode.filter(item => item === '');
 

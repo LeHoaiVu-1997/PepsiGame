@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
-  SafeAreaView,
   View,
   StyleSheet,
   Dimensions,
   Image,
-  Alert,
   ImageBackground,
 } from 'react-native';
 import {
@@ -21,8 +19,11 @@ import {SCREEN_SIGN} from '../../../../../resource/images';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import auth from '@react-native-firebase/auth';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {saveConfirm} from '../../../redux/slices/authentication';
+import {getUser} from './firebaseAPI';
+import {RootState} from '../../../redux/store';
+import {signIn} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -40,13 +41,20 @@ const signInSchema = Yup.object({
 
 const SignIn: React.FC = (props: any) => {
   const {navigation} = props;
-
   const dispatch = useDispatch();
+  const isUserConfirmed = useSelector(
+    (state: RootState) => state.authentication.isUserConfirmed,
+  );
 
   const signInWithPhoneNumber = async (phoneNumber: string) => {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    dispatch(saveConfirm(confirmation));
-    navigation.navigate('VerifyOTP');
+    dispatch(signIn({phone_number: phoneNumber}));
+    if (isUserConfirmed === false) {
+      const confirmation = await auth().signInWithPhoneNumber('+84971721198');
+      dispatch(saveConfirm(confirmation));
+      navigation.navigate('VerifyOTP');
+    } else {
+      console.log('user not confirmed!');
+    }
   };
 
   return (
@@ -67,7 +75,7 @@ const SignIn: React.FC = (props: any) => {
             validationSchema={signInSchema}
             onSubmit={values => {
               // navigation.navigate('VerifyOTP');
-              signInWithPhoneNumber('+84971721198');
+              signInWithPhoneNumber(values.phoneNumber);
             }}>
             {formik => (
               <KeyboardAwareScrollView>
