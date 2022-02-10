@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Alert} from 'react-native';
 
 const authenticationSlice = createSlice({
   name: 'authentication',
@@ -30,6 +31,7 @@ const authenticationSlice = createSlice({
     signInFailed: state => {
       state.isAuthenticating = false;
       state.isUserConfirmed = false;
+      Alert.alert('Đăng nhập không thành công!');
       console.log('sign in failed');
     },
   },

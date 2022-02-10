@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -50,14 +50,19 @@ const SignIn: React.FC = (props: any) => {
     (state: RootState) => state.authentication.isAuthenticating,
   );
 
-  const signInWithPhoneNumber = async (phoneNumber: string) => {
+  useEffect(() => {
+    handleSignInComplete();
+  }, [isUserConfirmed]);
+
+  const signInWithPhoneNumber = (phoneNumber: string) => {
     dispatch(signIn({phone_number: phoneNumber}));
+  };
+
+  const handleSignInComplete = async () => {
     if (isUserConfirmed === true) {
       const confirmation = await auth().signInWithPhoneNumber('+84971721198');
       dispatch(saveConfirm(confirmation));
       navigation.navigate('VerifyOTP');
-    } else {
-      Alert.alert('Đăng nhập không thành công!');
     }
   };
 
