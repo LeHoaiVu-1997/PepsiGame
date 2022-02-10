@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
-  SafeAreaView,
   View,
   StyleSheet,
   Dimensions,
-  Alert,
   ImageBackground,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -16,9 +14,11 @@ import CheckBox from '@react-native-community/checkbox';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {BUTTON_WHITE, SCREEN_SIGN} from '../../../../../resource/images';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {saveConfirm} from '../../../redux/slices/authentication';
 import auth from '@react-native-firebase/auth';
+import {signUp} from '../../../redux/actions/authentication.actions';
+import { RootState } from '../../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -42,6 +42,15 @@ const SignUp: React.FC = (props: any) => {
   const {navigation} = props;
   const [termRead, setTermRead] = useState(false);
   const dispatch = useDispatch();
+  const isUserConfirmed = useSelector(
+    (state: RootState) => state.authentication.isUserConfirmed,
+  );
+
+  useEffect(() => {
+    if (isUserConfirmed === true) {
+      handleSignUpSuccess();
+    }
+  }, [isUserConfirmed]);
 
   const isAllTrue = (isTermRead: boolean, formikValid: boolean) => {
     if (isTermRead === true || formikValid === true) {
@@ -50,8 +59,12 @@ const SignUp: React.FC = (props: any) => {
     return false;
   };
 
-  const signUp = async (phoneNumber: string) => {
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+  const handleSignUp = async (phoneNumber: string, userName: string) => {
+    dispatch(signUp({name: userName, phone_number: phoneNumber}));
+  };
+
+  const handleSignUpSuccess = async () => {
+    const confirmation = await auth().signInWithPhoneNumber('+84971721198');
     dispatch(saveConfirm(confirmation));
     navigation.navigate('VerifyOTP');
   };
@@ -72,7 +85,7 @@ const SignUp: React.FC = (props: any) => {
             initialValues={{phoneNumber: '', userName: ''}}
             validationSchema={signInSchema}
             onSubmit={values => {
-              signUp('+84971721198');
+              handleSignUp(values.phoneNumber, values.userName);
             }}>
             {formik => (
               <KeyboardAwareScrollView>

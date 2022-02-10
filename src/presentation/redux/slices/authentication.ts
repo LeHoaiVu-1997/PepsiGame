@@ -34,6 +34,22 @@ const authenticationSlice = createSlice({
       Alert.alert('Đăng nhập không thành công!');
       console.log('sign in failed');
     },
+    signUpBegin: state => {
+      state.isSigningUp = true;
+      console.log('Sign up begin');
+    },
+    signUpSuccess: state => {
+      state.isSigningUp = false;
+      // state.isUserConfirmed = true;
+      console.log('Sign up success');
+    },
+    signUpFailed: state => {
+      state.isSigningUp = false;
+      // state.isUserConfirmed = false;
+      console.log('Sign up failed');
+
+      Alert.alert('Đăng kí thất bại!');
+    },
   },
 });
 
@@ -44,5 +60,8 @@ export const {
   signInBegin,
   signInFailed,
   signInSuccess,
+  signUpBegin,
+  signUpSuccess,
+  signUpFailed,
 } = authenticationSlice.actions;
 export default authenticationSlice.reducer;

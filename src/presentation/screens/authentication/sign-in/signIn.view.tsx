@@ -54,7 +54,7 @@ const SignIn: React.FC = (props: any) => {
     handleSignInComplete();
   }, [isUserConfirmed]);
 
-  const signInWithPhoneNumber = (phoneNumber: string) => {
+  const handleSignIn = (phoneNumber: string) => {
     dispatch(signIn({phone_number: phoneNumber}));
   };
 
@@ -89,7 +89,7 @@ const SignIn: React.FC = (props: any) => {
             validationSchema={signInSchema}
             onSubmit={values => {
               // navigation.navigate('VerifyOTP');
-              signInWithPhoneNumber(values.phoneNumber);
+              handleSignIn(values.phoneNumber);
             }}>
             {formik => (
               <KeyboardAwareScrollView>
