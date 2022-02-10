@@ -30,12 +30,12 @@ const authorizedSlice = createSlice({
       state.current_play_type = action.payload;
     },
     saveUser: (state, action: PayloadAction<any>) => {
-      console.log('action: ', action.payload);
+      console.log('save user');
 
-      state.name = action.payload[0]['name'];
-      state.phone_number = action.payload[0]['phone_number'];
-      state.play_times_exchange = action.payload[0]['play_time_exchange'];
-      state.play_times_free = action.payload[0]['play_time_free'];
+      state.name = action.payload['name'];
+      // state.phone_number = action.payload['phone_number'];
+      state.play_times_exchange = action.payload['play_time_exchange'];
+      state.play_times_free = action.payload['play_time_free'];
     },
   },
 });

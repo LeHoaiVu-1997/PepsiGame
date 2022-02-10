@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Text,
   View,
@@ -6,6 +6,8 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   THREECANONE,
@@ -21,7 +23,6 @@ import * as Yup from 'yup';
 import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {saveConfirm} from '../../../redux/slices/authentication';
-import {getUser} from './firebaseAPI';
 import {RootState} from '../../../redux/store';
 import {signIn} from '../../../redux/actions/authentication.actions';
 
@@ -45,15 +46,18 @@ const SignIn: React.FC = (props: any) => {
   const isUserConfirmed = useSelector(
     (state: RootState) => state.authentication.isUserConfirmed,
   );
+  const isLoading = useSelector(
+    (state: RootState) => state.authentication.isAuthenticating,
+  );
 
   const signInWithPhoneNumber = async (phoneNumber: string) => {
     dispatch(signIn({phone_number: phoneNumber}));
-    if (isUserConfirmed === false) {
+    if (isUserConfirmed === true) {
       const confirmation = await auth().signInWithPhoneNumber('+84971721198');
       dispatch(saveConfirm(confirmation));
       navigation.navigate('VerifyOTP');
     } else {
-      console.log('user not confirmed!');
+      Alert.alert('Đăng nhập không thành công!');
     }
   };
 
@@ -63,6 +67,11 @@ const SignIn: React.FC = (props: any) => {
         source={SCREEN_SIGN}
         resizeMode="cover"
         style={styles.fullScreenContainer}>
+        {isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator animating={isLoading} size="large" />
+          </View>
+        )}
         <View style={styles.greetingContainer}>
           <Text style={styles.textWelcome}>{'Hey, chào mừng bạn đến với'}</Text>
           <Text style={styles.textTitle}>{'Pepsi Tết'}</Text>
@@ -123,6 +132,15 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
     flexDirection: 'column',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   greetingContainer: {
     flex: 25,

@@ -1,5 +1,4 @@
 export interface SignInResult {
-  platform?: string;
   phone_number: string;
   name?: string;
 }
