@@ -18,7 +18,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {saveConfirm} from '../../../redux/slices/authentication';
 import auth from '@react-native-firebase/auth';
 import {signUp} from '../../../redux/actions/authentication.actions';
-import { RootState } from '../../../redux/store';
+import {RootState} from '../../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

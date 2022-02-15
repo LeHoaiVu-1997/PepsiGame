@@ -24,7 +24,10 @@ import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {saveConfirm} from '../../../redux/slices/authentication';
 import {RootState} from '../../../redux/store';
-import {signIn} from '../../../redux/actions/authentication.actions';
+import {
+  signIn,
+  requestOtp,
+} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -49,19 +52,38 @@ const SignIn: React.FC = (props: any) => {
   const isLoading = useSelector(
     (state: RootState) => state.authentication.isAuthenticating,
   );
+  const otpConfirmation = useSelector(
+    (state: RootState) => state.authentication.otpConfirmation,
+  );
 
   useEffect(() => {
     handleSignInComplete();
   }, [isUserConfirmed]);
 
+  useEffect(() => {
+    handleRequestOtpComplete();
+  }, [otpConfirmation]);
+
   const handleSignIn = (phoneNumber: string) => {
     dispatch(signIn({phone_number: phoneNumber}));
   };
 
-  const handleSignInComplete = async () => {
+  // const handleSignInComplete = async () => {
+  //   if (isUserConfirmed === true) {
+  //     const confirmation = await auth().signInWithPhoneNumber('+84971721198');
+  //     dispatch(saveConfirm(confirmation));
+  //     navigation.navigate('VerifyOTP');
+  //   }
+  // };
+
+  const handleSignInComplete = () => {
     if (isUserConfirmed === true) {
-      const confirmation = await auth().signInWithPhoneNumber('+84971721198');
-      dispatch(saveConfirm(confirmation));
+      dispatch(requestOtp('+84971721198'));
+    }
+  };
+
+  const handleRequestOtpComplete = () => {
+    if (otpConfirmation != null) {
       navigation.navigate('VerifyOTP');
     }
   };

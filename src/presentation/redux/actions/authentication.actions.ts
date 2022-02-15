@@ -1,6 +1,12 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Credential} from '../../../domain/entities/authentication';
+import {
+  Credential,
+  VerifyOtpPayload,
+} from '../../../domain/entities/authentication';
 
 export const signIn = createAction<Credential>('authentication/signIn');
 export const signUp = createAction<Credential>('authentocation/signUp');
-export const verifyOtp = createAction('authentication/verifyOtp');
+export const requestOtp = createAction<string>('authentication/requestOtp');
+export const verifyOtp = createAction<VerifyOtpPayload>(
+  'authentication/verifyOtp',
+);

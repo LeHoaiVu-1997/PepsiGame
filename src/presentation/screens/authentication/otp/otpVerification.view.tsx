@@ -1,19 +1,18 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
-  SafeAreaView,
   View,
   StyleSheet,
   Dimensions,
-  Alert,
   TextInput,
   ImageBackground,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import RectangleButton from '../../../components/buttons/rectangle-button';
 import {SCREEN_SIGN} from '../../../../../resource/images';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../redux/store';
+import {verifyOtp} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,8 +22,15 @@ const VerifyOtp: React.FC = (props: any) => {
   const [otp, setOtp] = useState(new Array(6).fill(''));
   const [wrongOtp, setWrongOtp] = useState(false);
   const [codeFilled, setCodeFilled] = useState(false);
-  const confirm = useSelector(
-    (state: RootState) => state.authentication.confirm,
+  const dispatch = useDispatch();
+  const otpConfirmation = useSelector(
+    (state: RootState) => state.authentication.otpConfirmation,
+  );
+  const isOtpValid = useSelector(
+    (state: RootState) => state.authentication.isOtpValid,
+  );
+  const verifyOtpFailureNote = useSelector(
+    (state: RootState) => state.authentication.verifyOtpFailureNote,
   );
 
   const passcode1Ref = useRef();
@@ -34,21 +40,25 @@ const VerifyOtp: React.FC = (props: any) => {
   const passcode5Ref = useRef();
   const passcode6Ref = useRef();
 
-  // const name = useSelector((state: RootState) => state.authorized.name);
-  // const phone = useSelector(
-  //   (state: RootState) => state.authorized.phone_number,
-  // );
-  // const free = useSelector(
-  //   (state: RootState) => state.authorized.play_times_free,
-  // );
-  // const exchange = useSelector(
-  //   (state: RootState) => state.authorized.play_times_exchange,
-  // );
+  useEffect(() => {
+    handleOtpVerificationConplete();
+  }, [isOtpValid]);
 
-  // console.log('name: ', name);
-  // console.log('phone: ', phone);
-  // console.log('free: ', free);
-  // console.log('exchange: ', exchange);
+  useEffect(() => {
+    handleWrongOtp();
+  }, [verifyOtpFailureNote]);
+
+  const handleOtpVerificationConplete = () => {
+    if (isOtpValid === true) {
+      navigation.navigate('Main screen');
+    }
+  };
+
+  const handleWrongOtp = () => {
+    if (verifyOtpFailureNote === 'wrong otp code') {
+      setWrongOtp(true);
+    }
+  };
 
   const checkCodeFilled = otpCode => {
     let notFilled = otpCode.filter(item => item === '');
@@ -67,13 +77,18 @@ const VerifyOtp: React.FC = (props: any) => {
     checkCodeFilled(newOtp);
   };
 
-  const verifyOtp = async () => {
-    try {
-      await confirm.confirm(otp.join(''));
-      navigation.navigate('Main screen');
-    } catch (error) {
-      setWrongOtp(true);
-    }
+  const handleVerifyOtp = async () => {
+    // try {
+    //   let res = await confirm.confirm(otp.join(''));
+    //   console.log('res: ', res);
+
+    //   navigation.navigate('Main screen');
+    // } catch (error) {
+    //   console.log('error: ', error);
+
+    //   setWrongOtp(true);
+    // }
+    dispatch(verifyOtp({otp: otp.join(''), confirm: otpConfirmation}));
   };
 
   return (
@@ -180,7 +195,7 @@ const VerifyOtp: React.FC = (props: any) => {
             <View style={{marginTop: windowHeight * 0.035}}>
               <RectangleButton
                 title={'Xác nhận'}
-                onPress={verifyOtp}
+                onPress={handleVerifyOtp}
                 disabled={!codeFilled}
               />
             </View>

@@ -2,7 +2,7 @@ import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import authorized from './slices/authorized';
 import authentication from './slices/authentication';
 import {createEpicMiddleware} from 'redux-observable';
-import {getUserEpic, signUpEpic, rootEpic} from './epics/authentication.epics';
+import {rootEpic} from './epics/authentication.epics';
 
 const epicMiddleware = createEpicMiddleware();
 // const customizedMiddleware = getDefaultMiddleware({

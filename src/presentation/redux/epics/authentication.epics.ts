@@ -1,4 +1,9 @@
-import {signIn, signUp} from '../actions/authentication.actions';
+import {
+  requestOtp,
+  signIn,
+  signUp,
+  verifyOtp,
+} from '../actions/authentication.actions';
 import {
   signInBegin,
   signInSuccess,
@@ -6,14 +11,22 @@ import {
   signUpBegin,
   signUpSuccess,
   signUpFailed,
+  requestOtpBegin,
+  requestOtpFailed,
+  requestOtpSuccess,
+  verifyOtpBegin,
+  verifyOtpFailed,
+  verifyOtpSuccess,
 } from '../slices/authentication';
 import {of, concat} from 'rxjs';
-import {filter, switchMap} from 'rxjs/operators';
+import {filter, switchMap, map, catchError} from 'rxjs/operators';
 import {Epic, combineEpics} from 'redux-observable';
 import {saveUser} from '../slices/authorized';
 import {SignInUseCase} from '../../../domain/usecases/authentication/SignIn.use-case';
 import {container} from 'tsyringe';
 import {SignUpUseCase} from '../../../domain/usecases/authentication/SignUp.use-case';
+import {RequestOtpUseCase} from '../../../domain/usecases/authentication/RequestOtp.use-case';
+import {VerifyOtpUseCase} from './../../../domain/usecases/authentication/VerifyOtp.use-case';
 
 const getUserEpic: Epic = action$ => {
   return action$.pipe(
@@ -52,5 +65,45 @@ const signUpEpic: Epic = action$ => {
   );
 };
 
-export {getUserEpic, signUpEpic};
-export const rootEpic = combineEpics(getUserEpic, signUpEpic);
+const requestOtpEpic: Epic = action$ => {
+  return action$.pipe(
+    filter(requestOtp.match),
+    switchMap(action => {
+      let usecase = container.resolve<RequestOtpUseCase>('RequestOtpUseCase');
+      return concat(
+        of(requestOtpBegin()),
+        usecase.call(action.payload).pipe(
+          map(res => requestOtpSuccess(res)),
+          catchError(() => of(requestOtpFailed())),
+        ),
+      );
+    }),
+  );
+};
+
+const verifyOtpEpic: Epic = action$ => {
+  return action$.pipe(
+    filter(verifyOtp.match),
+    switchMap(action => {
+      let usecase = container.resolve<VerifyOtpUseCase>('VerifyOtpUseCase');
+      return concat(
+        of(verifyOtpBegin()),
+        usecase.call(action.payload).pipe(
+          map(res => {
+            if (res.success === true) return verifyOtpSuccess();
+            return verifyOtpFailed(res);
+          }),
+          catchError(res => of(verifyOtpFailed(res))),
+        ),
+      );
+    }),
+  );
+};
+
+export {getUserEpic, signUpEpic, requestOtpEpic, verifyOtpEpic};
+export const rootEpic = combineEpics(
+  getUserEpic,
+  signUpEpic,
+  requestOtpEpic,
+  verifyOtpEpic,
+);
