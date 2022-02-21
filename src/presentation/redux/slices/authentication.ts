@@ -25,43 +25,34 @@ const authenticationSlice = createSlice({
     },
     signInBegin: state => {
       state.isAuthenticating = true;
-      console.log('sign in begin');
     },
     signInSuccess: state => {
       state.isAuthenticating = false;
       state.isUserConfirmed = true;
-      console.log('sign in success');
     },
     signInFailed: state => {
       state.isAuthenticating = false;
       state.isUserConfirmed = false;
       Alert.alert('Đăng nhập không thành công!');
-      console.log('sign in failed');
     },
     signUpBegin: state => {
       state.isSigningUp = true;
-      console.log('Sign up begin');
     },
     signUpSuccess: state => {
       state.isSigningUp = false;
       // state.isUserConfirmed = true;
-      console.log('Sign up success');
     },
     signUpFailed: state => {
       state.isSigningUp = false;
       // state.isUserConfirmed = false;
-      console.log('Sign up failed');
-
       Alert.alert('Đăng kí thất bại!');
     },
     requestOtpBegin: state => {
       state.isRequestingOtp = true;
-      console.log('requestOtpBegin');
     },
     requestOtpSuccess: (state, action: PayloadAction<any>) => {
       state.isRequestingOtp = false;
       state.otpConfirmation = action.payload.otp_confirmation;
-      console.log('requestOtpSuccess');
     },
     requestOtpFailed: state => {
       state.isRequestingOtp = false;
@@ -69,18 +60,15 @@ const authenticationSlice = createSlice({
     },
     verifyOtpBegin: state => {
       state.isVeryfingOtp = true;
-      console.log('verifyOtpBegin');
     },
     verifyOtpSuccess: state => {
       state.isVeryfingOtp = false;
       state.isOtpValid = true;
-      console.log('verifyOtpSuccess');
     },
     verifyOtpFailed: (state, action: PayloadAction<any>) => {
       state.isVeryfingOtp = false;
       state.isOtpValid = false;
       state.verifyOtpFailureNote = action.payload.note;
-      console.log('verifyOtpFailed');
     },
   },
 });

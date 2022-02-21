@@ -2,7 +2,7 @@ import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import authorized from './slices/authorized';
 import authentication from './slices/authentication';
 import {createEpicMiddleware} from 'redux-observable';
-import {rootEpic} from './epics/authentication.epics';
+import {RootEpic} from './epic';
 
 const epicMiddleware = createEpicMiddleware();
 // const customizedMiddleware = getDefaultMiddleware({
@@ -21,7 +21,7 @@ export const store = configureStore({
     getDefaultMiddleware({serializableCheck: false}).concat(epicMiddleware),
 });
 
-epicMiddleware.run(rootEpic);
+epicMiddleware.run(RootEpic);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

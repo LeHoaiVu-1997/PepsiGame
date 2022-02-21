@@ -1,10 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
 import {Alert} from 'react-native';
-import axios from 'axios';
+// import axios from 'axios';
 import auth from '@react-native-firebase/auth';
 
-const baseUrl =
-  'https://firestore.googleapis.com/v1/projects/pepsigameauth/databases/(default)/documents';
+// const baseUrl =
+//   'https://firestore.googleapis.com/v1/projects/pepsigameauth/databases/(default)/documents';
 
 export const getUser = async (phoneNumber: string) => {
   const doc = await firestore()
@@ -14,9 +14,14 @@ export const getUser = async (phoneNumber: string) => {
     .catch(e => {
       Alert.alert('Error: ', e);
     });
-  console.log('data: ', doc.data());
 
-  return doc.data();
+  let user = doc.data();
+  if (user !== undefined) {
+    user.phone_number = phoneNumber;
+  }
+  console.log('user: ', user);
+
+  return user;
 };
 
 export const signUp = async (credential: any) => {
@@ -29,6 +34,12 @@ export const signUp = async (credential: any) => {
         name: credential.name,
         play_time_free: 3,
         play_time_exchange: 0,
+        collection: {
+          coins: 0,
+          pepsi_cans: 0,
+          mirinda_cans: 0,
+          sevenup_cans: 0,
+        },
       })
       .then(res => console.log('res: ', res));
 
@@ -75,4 +86,28 @@ export const verifyOtp = async (otp: string, confirm: any) => {
   } else {
     return {success: false, note: 'no otp confirmation'};
   }
+};
+
+export const getReward = async () => {
+  const doc = await firestore()
+    .collection('rewards')
+    .doc('3')
+    .get()
+    .catch(e => {
+      Alert.alert('Error: ', e);
+    });
+  // console.log('reward: ', doc.data());
+
+  if (doc.data() != undefined) {
+    return {reward: doc.data(), success: true};
+  } else {
+    return {success: false, note: 'no reward'};
+  }
+};
+
+export const updateUser = async (user: any) => {
+  let tempUser = delete user.phone_number;
+  console.log('temp user: ', tempUser);
+  // await firestore().collection('users').doc(user.phone_number).update(tempUser);
+  return {success: true, user: user};
 };

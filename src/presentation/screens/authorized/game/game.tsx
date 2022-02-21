@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   Text,
   Dimensions,
@@ -17,6 +16,7 @@ import {
 } from '../../../redux/slices/authorized';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../../redux/store';
+import {getReward} from '../../../redux/actions/authorized.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -28,29 +28,43 @@ const Game: React.FC = (props: any) => {
     (state: RootState) => state.authorized.current_play_type,
   );
   const playTimesExchange = useSelector(
-    (state: RootState) => state.authorized.play_times_exchange,
+    (state: RootState) => state.authorized.user.play_time_exchange,
   );
   const playTimesFree = useSelector(
-    (state: RootState) => state.authorized.play_times_free,
+    (state: RootState) => state.authorized.user.play_time_free,
   );
+  const reward = useSelector((state: RootState) => state.authorized.reward);
 
   const dispatch = useDispatch();
 
-  const onFinish = () => {
-    if (playType === 'exchange') {
-      dispatch(decrementExchange());
-      navigation.navigate('Congratulation');
-    } else if (playType === 'free') {
-      dispatch(decrementFree());
-      navigation.navigate('Congratulation');
-    } else {
-      navigation.navigate('Main screen');
+  useEffect(() => {
+    handleGetRewardComplete();
+  }, [reward]);
+
+  const handleGetRewardComplete = () => {
+    console.log('reward:', reward);
+
+    if (reward != null && reward !== undefined) {
+      if (playType === 'exchange') {
+        dispatch(decrementExchange());
+        navigation.navigate('Congratulation');
+      } else if (playType === 'free') {
+        dispatch(decrementFree());
+        navigation.navigate('Congratulation');
+      } else {
+        navigation.navigate('Main screen');
+      }
     }
+  };
+
+  const onFinish = () => {
+    dispatch(getReward());
   };
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={SCREEN_GAME}
+      <ImageBackground
+        source={SCREEN_GAME}
         resizeMode="cover"
         style={styles.container}>
         <View style={styles.headerContainer}>

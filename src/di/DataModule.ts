@@ -1,3 +1,5 @@
+import {UpdateUserUseCase} from './../domain/usecases/authorized/UpdateUser.use-case';
+import {GetRewardUseCase} from './../domain/usecases/authorized/GetReward.use-case';
 import {SignUpUseCase} from './../domain/usecases/authentication/SignUp.use-case';
 import {container} from 'tsyringe';
 import {SignInUseCase} from '../domain/usecases/authentication/SignIn.use-case';
@@ -16,5 +18,11 @@ export function registerDataDependencies() {
   });
   container.register('VerifyOtpUseCase', {
     useClass: VerifyOtpUseCase,
+  });
+  container.register('GetRewardUseCase', {
+    useClass: GetRewardUseCase,
+  });
+  container.register('UpdateUserUseCase', {
+    useClass: UpdateUserUseCase,
   });
 }

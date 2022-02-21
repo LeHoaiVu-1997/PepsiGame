@@ -17,3 +17,7 @@ export const BUTTON_INACTIVE = require('./defaultinactivebutton.png');
 export const BUTTON_PLAY_NOW = require('./buttonplaynow.png');
 export const BUTTON_SCAN_NOW = require('./buttonscannow.png');
 export const POPUP_PLAY_TIME_OVER = require('./popupplaytimeover.png');
+export const CAN_PEPSI = require('./lonpepsi.png');
+export const CAN_MIRINDA = require('./lonmirinda.png');
+export const CAN_SEVENUP = require('./lon7up.png');
+export const COIN_BADGE = require('./coinbadge.png');

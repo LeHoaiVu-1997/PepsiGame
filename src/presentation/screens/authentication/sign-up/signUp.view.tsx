@@ -17,7 +17,10 @@ import {BUTTON_WHITE, SCREEN_SIGN} from '../../../../../resource/images';
 import {useDispatch, useSelector} from 'react-redux';
 import {saveConfirm} from '../../../redux/slices/authentication';
 import auth from '@react-native-firebase/auth';
-import {signUp} from '../../../redux/actions/authentication.actions';
+import {
+  requestOtp,
+  signUp,
+} from '../../../redux/actions/authentication.actions';
 import {RootState} from '../../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
@@ -45,12 +48,19 @@ const SignUp: React.FC = (props: any) => {
   const isUserConfirmed = useSelector(
     (state: RootState) => state.authentication.isUserConfirmed,
   );
+  const otpConfirmation = useSelector(
+    (state: RootState) => state.authentication.otpConfirmation,
+  );
 
   useEffect(() => {
     if (isUserConfirmed === true) {
       handleSignUpSuccess();
     }
   }, [isUserConfirmed]);
+
+  useEffect(() => {
+    handleRequestOtpComplete();
+  }, [otpConfirmation]);
 
   const isAllTrue = (isTermRead: boolean, formikValid: boolean) => {
     if (isTermRead === true || formikValid === true) {
@@ -64,9 +74,15 @@ const SignUp: React.FC = (props: any) => {
   };
 
   const handleSignUpSuccess = async () => {
-    const confirmation = await auth().signInWithPhoneNumber('+84971721198');
-    dispatch(saveConfirm(confirmation));
-    navigation.navigate('VerifyOTP');
+    if (isUserConfirmed === true) {
+      dispatch(requestOtp('+84971721198'));
+    }
+  };
+
+  const handleRequestOtpComplete = () => {
+    if (otpConfirmation != null) {
+      navigation.navigate('VerifyOTP');
+    }
   };
 
   return (

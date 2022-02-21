@@ -28,12 +28,12 @@ const windowHeight = Dimensions.get('window').height;
 
 const MainScreen: React.FC = (props: any) => {
   const {navigation} = props;
-  const playTimesExchange = useSelector(
-    (state: RootState) => state.authorized.play_times_exchange,
-  );
-  const playTimesFree = useSelector(
-    (state: RootState) => state.authorized.play_times_free,
-  );
+  const user = useSelector((state: RootState) => state.authorized.user);
+  console.log('user: ', user);
+
+  const playTimesExchange = user.play_time_exchange;
+  const playTimesFree = user.play_time_free;
+
   const dispatch = useDispatch();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [ptsModalVisible, setPtsModalVisible] = useState(false);

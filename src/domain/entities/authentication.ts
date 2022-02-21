@@ -1,7 +1,4 @@
-export interface SignInResult {
-  phone_number: string;
-  name?: string;
-}
+export interface SignInResult {}
 
 export interface SignUpResult {
   note?: string;

@@ -101,7 +101,7 @@ const verifyOtpEpic: Epic = action$ => {
 };
 
 export {getUserEpic, signUpEpic, requestOtpEpic, verifyOtpEpic};
-export const rootEpic = combineEpics(
+export const AuthenticationEpics = combineEpics(
   getUserEpic,
   signUpEpic,
   requestOtpEpic,
