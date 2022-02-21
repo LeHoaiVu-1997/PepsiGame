@@ -37,8 +37,6 @@ const UpdateUserEpic: Epic = action$ => {
   return action$.pipe(
     filter(updateUser.match),
     switchMap(action => {
-      console.log('update user playload: ', action.payload);
-
       let usecase = container.resolve<UpdateUserUseCase>('UpdateUserUseCase');
       return concat(
         of(updateUserBegin()),

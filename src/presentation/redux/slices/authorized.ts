@@ -39,7 +39,6 @@ const authorizedSlice = createSlice({
     },
     saveUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
-      console.log('save user payload: ', action.payload);
     },
     updateUserBegin: state => {
       state.isUpdatingUser = true;
@@ -47,7 +46,6 @@ const authorizedSlice = createSlice({
     updateUserSuccess: (state, action: PayloadAction<any>) => {
       state.isUpdatingUser = false;
       state.user = action.payload;
-      console.log('update user done');
     },
     updateUserFailed: state => {
       state.isUpdatingUser = false;

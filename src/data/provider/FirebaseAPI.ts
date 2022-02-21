@@ -91,7 +91,7 @@ export const verifyOtp = async (otp: string, confirm: any) => {
 export const getReward = async () => {
   const doc = await firestore()
     .collection('rewards')
-    .doc('3')
+    .doc('1')
     .get()
     .catch(e => {
       Alert.alert('Error: ', e);

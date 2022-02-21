@@ -20,7 +20,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../redux/store';
 import {updateUser} from '../../../redux/actions/authorized.actions';
-import { resetReward } from '../../../redux/slices/authorized';
+import {resetReward} from '../../../redux/slices/authorized';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -110,19 +110,9 @@ const Congratulation: React.FC = (props: any) => {
   };
 
   const handleConfirm = () => {
-    let newUserData = user;
-    console.log('reward coins type: ', typeof reward.coins);
-    console.log('user coins type: ', typeof newUserData.collection.coins);
-    console.log('sum: ', reward.coins + newUserData.collection.coins);
-
+    let newUserData = JSON.parse(JSON.stringify(user));
     switch (reward.can) {
       case 'pepsi':
-        console.log('pepsi');
-        console.log(
-          'newUserData.collection.pepsi_cans: ',
-          newUserData.collection.pepsi_cans,
-        );
-
         newUserData.collection.pepsi_cans += 1;
         break;
       case 'mirinda':
@@ -136,8 +126,6 @@ const Congratulation: React.FC = (props: any) => {
         newUserData.collection.sevenup_cans += 1;
         break;
     }
-    console.log('new user data: ', newUserData);
-
     dispatch(updateUser({user: newUserData}));
     dispatch(resetReward());
     navigation.navigate('Main screen');
