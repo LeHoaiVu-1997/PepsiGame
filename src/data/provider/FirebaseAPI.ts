@@ -106,8 +106,9 @@ export const getReward = async () => {
 };
 
 export const updateUser = async (user: any) => {
-  let tempUser = delete user.phone_number;
-  console.log('temp user: ', tempUser);
-  // await firestore().collection('users').doc(user.phone_number).update(tempUser);
+  let tempUser = JSON.parse(JSON.stringify(user));
+  delete tempUser.phone_number;
+  // console.log('temp user: ', tempUser);
+  await firestore().collection('users').doc(user.phone_number).update(tempUser);
   return {success: true, user: user};
 };

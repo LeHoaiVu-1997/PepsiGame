@@ -111,6 +111,7 @@ const Congratulation: React.FC = (props: any) => {
 
   const handleConfirm = () => {
     let newUserData = JSON.parse(JSON.stringify(user));
+    newUserData.collection.coins += reward.coins;
     switch (reward.can) {
       case 'pepsi':
         newUserData.collection.pepsi_cans += 1;
