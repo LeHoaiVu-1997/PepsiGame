@@ -29,7 +29,6 @@ const windowHeight = Dimensions.get('window').height;
 const MainScreen: React.FC = (props: any) => {
   const {navigation} = props;
   const user = useSelector((state: RootState) => state.authorized.user);
-  console.log('user: ', user);
 
   const playTimesExchange = user.play_time_exchange;
   const playTimesFree = user.play_time_free;
@@ -110,6 +109,7 @@ const MainScreen: React.FC = (props: any) => {
               activeStyle={styles.buttonWhite}
               titleStyle={styles.textButton}
               backgroundImage={BUTTON_WHITE}
+              onPress={() => navigation.navigate('Collection')}
             />
             <RectangleButton
               title={'Chi tiết quà tặng'}
