@@ -11,6 +11,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export interface ImageButtonProps {
   imageSource?: any;
+  imageSourceDisable?: any;
   imageStyle?: StyleProp<ImageStyle>;
   buttonContainerStyle?: StyleProp<ViewStyle>;
   disable?: boolean;
@@ -18,8 +19,14 @@ export interface ImageButtonProps {
 }
 
 const ImageButton: React.FC<ImageButtonProps> = props => {
-  const {imageSource, buttonContainerStyle, imageStyle, disable, onPress} =
-    props;
+  const {
+    imageSource,
+    imageSourceDisable,
+    buttonContainerStyle,
+    imageStyle,
+    disable,
+    onPress,
+  } = props;
 
   return (
     <View
@@ -28,7 +35,11 @@ const ImageButton: React.FC<ImageButtonProps> = props => {
       }>
       <TouchableOpacity disabled={disable} onPress={onPress}>
         {imageSource ? (
-          <Image source={imageSource} resizeMode="contain" style={imageStyle} />
+          <Image
+            source={disable ? imageSourceDisable : imageSource}
+            resizeMode="contain"
+            style={imageStyle}
+          />
         ) : (
           <View style={styles.defaultButtonStyle} />
         )}

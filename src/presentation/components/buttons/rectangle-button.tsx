@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeButton: {
-    width: '70%',
+    width: windowWidth * 0.7,
     height: windowHeight * 0.08,
     flexDirection: 'column',
     justifyContent: 'center',
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   inactiveButton: {
-    width: '70%',
+    width: windowWidth * 0.7,
     height: windowHeight * 0.08,
     flexDirection: 'column',
     justifyContent: 'center',

@@ -25,6 +25,7 @@ export interface SingleButtonsPopupProps {
   onClose?: () => void;
   visible: boolean;
   backgroundImage?: any;
+  payload?: any;
 }
 
 const OutOfPlayTime: React.FC<SingleButtonsPopupProps> = props => {

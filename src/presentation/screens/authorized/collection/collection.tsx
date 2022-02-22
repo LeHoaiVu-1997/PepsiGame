@@ -22,16 +22,79 @@ import {
   CAN_SEVENUP,
 } from '../../../../../resource/images';
 import LogoutPopup from '../../../components/popup/logout-popup';
+import ImageButton from '../../../components/buttons/image-button';
+import {RootState} from '../../../redux/store';
+import ModalGift from '../../../components/popup/gift-modal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Collection: React.FC = (props: any) => {
   const {navigation} = props;
-  const [isPlusDisabled, setIsPlusDisable] = useState(false);
-  const [isMinusDisabled, setIsMinusDisable] = useState(false);
+  const [isPlusDisabled, setIsPlusDisable] = useState(true);
+  const [isMinusDisabled, setIsMinusDisable] = useState(true);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [comboAmount, setComboAmount] = useState(0);
+  const [maxComboAmount, setMaxComboAmount] = useState(0);
+  const [modalGiftVisible, setModalGiftVisible] = useState(false);
+
+  const user = useSelector((state: RootState) => state.authorized.user);
+
+  useEffect(() => {
+    findMaxComboAmount(
+      user.collection.pepsi_cans,
+      user.collection.mirinda_cans,
+      user.collection.sevenup_cans,
+    );
+  }, [
+    user.collection.pepsi_cans,
+    user.collection.mirinda_cans,
+    user.collection.sevenup_cans,
+  ]);
+
+  useEffect(() => {
+    plusButtonSideEffect(comboAmount, maxComboAmount);
+    minusButtonSideEffect(comboAmount);
+  }, [comboAmount, maxComboAmount]);
+
+  const findMaxComboAmount = (
+    pepsi: number,
+    mirinda: number,
+    sevenup: number,
+  ) => {
+    let min = 0;
+    min = Math.min(pepsi, mirinda, sevenup);
+    console.log('min: ', min);
+    setMaxComboAmount(min);
+  };
+
+  const plusButtonSideEffect = (combo: number, maxCombo: number) => {
+    if (combo < maxCombo) {
+      setIsPlusDisable(false);
+    } else {
+      setIsPlusDisable(true);
+    }
+  };
+
+  const minusButtonSideEffect = (combo: number) => {
+    if (combo <= 0) {
+      setIsMinusDisable(true);
+    } else {
+      setIsMinusDisable(false);
+    }
+  };
+
+  const handlePlus = () => {
+    if (comboAmount < maxComboAmount) {
+      setComboAmount(comboAmount + 1);
+    }
+  };
+
+  const handleMinus = () => {
+    if (comboAmount > 0) {
+      setComboAmount(comboAmount - 1);
+    }
+  };
 
   const handleLogout = () => {
     setLogoutModalVisible(true);
@@ -67,18 +130,74 @@ const Collection: React.FC = (props: any) => {
             <View style={styles.cansSection}>
               <View style={styles.singleCanSection}>
                 <Image source={CAN_PEPSI} style={styles.imageCan} />
-                <Text style={styles.textCanAmount}>{'0'}</Text>
+                <Text style={styles.textCanAmount}>
+                  {user.collection.pepsi_cans}
+                </Text>
               </View>
               <View style={styles.singleCanSection}>
                 <Image source={CAN_MIRINDA} style={styles.imageCan} />
-                <Text style={styles.textCanAmount}>{'0'}</Text>
+                <Text style={styles.textCanAmount}>
+                  {user.collection.mirinda_cans}
+                </Text>
               </View>
               <View style={styles.singleCanSection}>
                 <Image source={CAN_SEVENUP} style={styles.imageCan} />
-                <Text style={styles.textCanAmount}>{'0'}</Text>
+                <Text style={styles.textCanAmount}>
+                  {user.collection.sevenup_cans}
+                </Text>
               </View>
             </View>
-            <RectangleButton title="Đổi ngay" />
+            <View style={styles.textSection}>
+              <View style={styles.textLine}>
+                <Text style={styles.textExchangeCombo}>
+                  {'Đổi ngay bộ sưu tập'}
+                </Text>
+                <Text style={styles.textExchangeComboHightlight}>
+                  {' AN - LỘC - PHÚC'}
+                </Text>
+              </View>
+              <View style={styles.textLine}>
+                <Text style={styles.textExchangeCombo}>
+                  {'để có cơ hội nhận ngay'}
+                </Text>
+                <Text style={styles.textExchangeComboHightlight}>
+                  {' 300 coins'}
+                </Text>
+                <Text style={styles.textExchangeCombo}>{' hoặc'}</Text>
+              </View>
+              <View style={styles.textLine}>
+                <Text style={styles.textExchangeCombo}>{'một'}</Text>
+                <Text style={styles.textExchangeComboHightlight}>
+                  {' phần quà may mắn'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.comboSection}>
+              <ImageButton
+                disable={isMinusDisabled}
+                imageSource={BUTTON_MINUS_ENABLE}
+                imageSourceDisable={BUTTON_MINUS_DISABLE}
+                onPress={handleMinus}
+                buttonContainerStyle={styles.buttonCombo}
+              />
+              <Text style={styles.textComboAmount}>{comboAmount}</Text>
+              <ImageButton
+                disable={isPlusDisabled}
+                imageSource={BUTTON_PLUS_ENABLE}
+                imageSourceDisable={BUTTON_PLUS_DISABLE}
+                onPress={handlePlus}
+                buttonContainerStyle={styles.buttonCombo}
+              />
+            </View>
+            <View style={styles.buttonSection}>
+              <RectangleButton
+                title="Đổi ngay"
+                onPress={() => {
+                  setModalGiftVisible(!modalGiftVisible);
+                }}
+                disabled={comboAmount > 0 ? false : true}
+              />
+            </View>
           </View>
         </View>
         <LogoutPopup
@@ -88,6 +207,14 @@ const Collection: React.FC = (props: any) => {
             navigation.popToTop();
           }}
           onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+        />
+        <ModalGift
+          visible={modalGiftVisible}
+          onPress={() => {}}
+          onClose={() => {
+            setModalGiftVisible(!modalGiftVisible);
+          }}
+          payload={{comboAmount: comboAmount}}
         />
       </ImageBackground>
     </View>
@@ -120,6 +247,24 @@ const styles = StyleSheet.create({
   singleCanSection: {
     alignItems: 'center',
   },
+  buttonSection: {
+    marginTop: windowHeight * 0.04,
+  },
+  comboSection: {
+    marginTop: windowHeight * 0.02,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  buttonCombo: {
+    marginHorizontal: windowWidth * 0.05,
+  },
+  textSection: {
+    marginTop: windowHeight * 0.02,
+  },
+  textLine: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
   imageCoinBadge: {
     marginTop: windowHeight * 0.04,
   },
@@ -144,6 +289,22 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: windowHeight * 0.03,
+  },
+  textComboAmount: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  textExchangeCombo: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  textExchangeComboHightlight: {
+    color: 'yellow',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 
