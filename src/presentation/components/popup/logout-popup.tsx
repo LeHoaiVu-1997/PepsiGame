@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import RectangleButton from '../buttons/rectangle-button';
-import { BUTTON_WHITE } from '../../../../resource/images';
+import {BUTTON_WHITE} from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

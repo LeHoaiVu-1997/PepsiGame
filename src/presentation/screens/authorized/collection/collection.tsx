@@ -20,11 +20,14 @@ import {
   CAN_PEPSI,
   CAN_MIRINDA,
   CAN_SEVENUP,
+  REWARD_COINS,
+  REWARD_HAT,
 } from '../../../../../resource/images';
 import LogoutPopup from '../../../components/popup/logout-popup';
 import ImageButton from '../../../components/buttons/image-button';
 import {RootState} from '../../../redux/store';
 import ModalGift from '../../../components/popup/gift-modal';
+import ModalGiftReveal from '../../../components/popup/gift-reveal-modal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -37,6 +40,7 @@ const Collection: React.FC = (props: any) => {
   const [comboAmount, setComboAmount] = useState(0);
   const [maxComboAmount, setMaxComboAmount] = useState(0);
   const [modalGiftVisible, setModalGiftVisible] = useState(false);
+  const [modalGiftRevealVisible, setModalGiftRevealVisible] = useState(false);
 
   const user = useSelector((state: RootState) => state.authorized.user);
 
@@ -64,7 +68,6 @@ const Collection: React.FC = (props: any) => {
   ) => {
     let min = 0;
     min = Math.min(pepsi, mirinda, sevenup);
-    console.log('min: ', min);
     setMaxComboAmount(min);
   };
 
@@ -117,6 +120,7 @@ const Collection: React.FC = (props: any) => {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.topContainer}>
+            <Text style={styles.textCoins}>{user.collection.coins}</Text>
             <Image
               source={COIN_BADGE_BIGGER}
               resizeMode="contain"
@@ -210,11 +214,21 @@ const Collection: React.FC = (props: any) => {
         />
         <ModalGift
           visible={modalGiftVisible}
-          onPress={() => {}}
+          onPress={() => {
+            setModalGiftRevealVisible(!modalGiftRevealVisible);
+            setModalGiftVisible(!modalGiftVisible);
+          }}
           onClose={() => {
             setModalGiftVisible(!modalGiftVisible);
           }}
           payload={{comboAmount: comboAmount}}
+        />
+        <ModalGiftReveal
+          visible={modalGiftRevealVisible}
+          onClose={() => {
+            setModalGiftRevealVisible(!modalGiftRevealVisible);
+          }}
+          payload={{images: [{name: 'coins'}, {name: 'hat'}]}}
         />
       </ImageBackground>
     </View>
@@ -305,6 +319,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  textCoins: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: 'white',
+    position: 'absolute',
+    left: windowWidth * 0.42,
+    top: windowHeight * 0.075,
+    zIndex: 1,
   },
 });
 

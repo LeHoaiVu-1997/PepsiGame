@@ -34,3 +34,5 @@ export const COIN_BADGE = require('./coinbadge.png');
 export const COIN_BADGE_BIGGER = require('./coinbadgebigger.png');
 export const EXCHANGE_COMBO = require('./exchangecombo.png');
 export const EXCHANGE_COMBO_RESULT = require('./exchangecomboresult.png');
+export const REWARD_COINS = require('./coins.png');
+export const REWARD_HAT = require('./hat.png');

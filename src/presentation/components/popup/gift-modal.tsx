@@ -23,7 +23,7 @@ const ModalGift: React.FC<SingleButtonsPopupProps> = props => {
   const {onPress, onClose, visible, payload, backgroundImage} = props;
 
   return (
-    <Modal visible={visible} transparent={false}>
+    <Modal visible={visible} transparent={false} animationType="fade">
       <View style={styles.modalContainer}>
         <ImageBackground
           source={backgroundImage ? backgroundImage : EXCHANGE_COMBO}
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.7,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    width: windowWidth,
   },
   textSection: {
     marginBottom: windowHeight * 0.05,
