@@ -1,10 +1,15 @@
 import {UpdateUserUseCase} from './../../../domain/usecases/authorized/UpdateUser.use-case';
 import {GetRewardUseCase} from './../../../domain/usecases/authorized/GetReward.use-case';
+import {ExchangeComboUseCase} from '../../../domain/usecases/authorized/ExchangeCombo';
 import {of, concat} from 'rxjs';
 import {filter, switchMap, map, catchError} from 'rxjs/operators';
 import {Epic, combineEpics} from 'redux-observable';
 import {container} from 'tsyringe';
-import {getReward, updateUser} from '../actions/authorized.actions';
+import {
+  exchangeCombo,
+  getReward,
+  updateUser,
+} from '../actions/authorized.actions';
 import {
   getRewardBegin,
   getRewardSuccess,
@@ -12,6 +17,10 @@ import {
   updateUserBegin,
   updateUserSuccess,
   updateUserFailed,
+  exchangeComboBegin,
+  exchangeComboFailed,
+  exchangeComboSuccess,
+  resetExchangeComboResult,
 } from '../slices/authorized';
 
 const GetRewardEpic: Epic = action$ => {
@@ -52,4 +61,30 @@ const UpdateUserEpic: Epic = action$ => {
   );
 };
 
-export const AuthorizedEpics = combineEpics(GetRewardEpic, UpdateUserEpic);
+const ExchangeComboEpic: Epic = action$ => {
+  return action$.pipe(
+    filter(exchangeCombo.match),
+    switchMap(action => {
+      let usecase = container.resolve<ExchangeComboUseCase>(
+        'ExchangeComboUseCase',
+      );
+      return concat(
+        of(exchangeComboBegin()),
+        usecase.call(action.payload).pipe(
+          map(res => {
+            if (res.success === true)
+              return exchangeComboSuccess(res.combo_rewards);
+            else return exchangeComboFailed();
+          }),
+          catchError(() => of(exchangeComboFailed())),
+        ),
+      );
+    }),
+  );
+};
+
+export const AuthorizedEpics = combineEpics(
+  GetRewardEpic,
+  UpdateUserEpic,
+  ExchangeComboEpic,
+);

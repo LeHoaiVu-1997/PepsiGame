@@ -28,6 +28,11 @@ import ImageButton from '../../../components/buttons/image-button';
 import {RootState} from '../../../redux/store';
 import ModalGift from '../../../components/popup/gift-modal';
 import ModalGiftReveal from '../../../components/popup/gift-reveal-modal';
+import {
+  exchangeCombo,
+  updateUser,
+} from '../../../redux/actions/authorized.actions';
+import {resetExchangeComboResult} from '../../../redux/slices/authorized';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -42,7 +47,12 @@ const Collection: React.FC = (props: any) => {
   const [modalGiftVisible, setModalGiftVisible] = useState(false);
   const [modalGiftRevealVisible, setModalGiftRevealVisible] = useState(false);
 
+  const dispatch = useDispatch();
+
   const user = useSelector((state: RootState) => state.authorized.user);
+  const exchangeComboResult = useSelector(
+    (state: RootState) => state.authorized.exchange_combo_result,
+  );
 
   useEffect(() => {
     findMaxComboAmount(
@@ -101,6 +111,28 @@ const Collection: React.FC = (props: any) => {
 
   const handleLogout = () => {
     setLogoutModalVisible(true);
+  };
+
+  const handleConfirmExchangeCombo = () => {
+    setModalGiftRevealVisible(!modalGiftRevealVisible);
+    setModalGiftVisible(!modalGiftVisible);
+    dispatch(exchangeCombo(comboAmount));
+    setComboAmount(0);
+  };
+
+  const handleUpdateUser = () => {
+    let newUserData = JSON.parse(JSON.stringify(user));
+    for (var i = 0; i < exchangeComboResult.length; i++) {
+      if (exchangeComboResult[i].name === 'coins') {
+        newUserData.collection.coins += 300;
+      }
+    }
+    newUserData.collection.mirinda_cans -= comboAmount;
+    newUserData.collection.pepsi_cans -= comboAmount;
+    newUserData.collection.sevenup_cans -= comboAmount;
+
+    dispatch(updateUser({user: newUserData}));
+    dispatch(resetExchangeComboResult());
   };
 
   return (
@@ -214,10 +246,7 @@ const Collection: React.FC = (props: any) => {
         />
         <ModalGift
           visible={modalGiftVisible}
-          onPress={() => {
-            setModalGiftRevealVisible(!modalGiftRevealVisible);
-            setModalGiftVisible(!modalGiftVisible);
-          }}
+          onPress={handleConfirmExchangeCombo}
           onClose={() => {
             setModalGiftVisible(!modalGiftVisible);
           }}
@@ -228,7 +257,10 @@ const Collection: React.FC = (props: any) => {
           onClose={() => {
             setModalGiftRevealVisible(!modalGiftRevealVisible);
           }}
-          payload={{images: [{name: 'coins'}, {name: 'hat'}]}}
+          payload={{
+            images: exchangeComboResult,
+          }}
+          sideEffect={handleUpdateUser}
         />
       </ImageBackground>
     </View>

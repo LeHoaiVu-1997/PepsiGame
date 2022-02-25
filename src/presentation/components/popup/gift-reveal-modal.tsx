@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -29,10 +29,20 @@ export interface ModalGiftRevealProps {
   onClose: () => void;
   payload?: any;
   backgoundImage?: any;
+  sideEffect: () => void;
 }
 
 const ModalGiftReveal: React.FC<ModalGiftRevealProps> = props => {
-  const {visible, onClose, payload, backgoundImage} = props;
+  const {visible, onClose, payload, backgoundImage, sideEffect} = props;
+
+  // useEffect(() => {
+  //   sideEffect();
+  // }, []);
+
+  const handleOnClose = () => {
+    onClose();
+    sideEffect();
+  };
 
   return (
     <Modal visible={visible} transparent={false} animationType="fade">
@@ -42,17 +52,12 @@ const ModalGiftReveal: React.FC<ModalGiftRevealProps> = props => {
           style={styles.modalContentContainer}
           resizeMode="cover">
           <View style={styles.rewardSection}>
-            {/* <Image source={REWARD_COINS} resizeMode="contain" /> */}
-            <ImageCarousel
-              images={payload.images}
-              onPressBackward={() => {}}
-              onPressForward={() => {}}
-            />
+            <ImageCarousel images={payload.images} />
           </View>
-          <View style={styles.textSection}>
-            <Text style={styles.text}>{'Bạn nhận được'}</Text>
-          </View>
-          <ImageButton imageSource={BUTTON_CLOSE_WHITE} onPress={onClose} />
+          <ImageButton
+            imageSource={BUTTON_CLOSE_WHITE}
+            onPress={handleOnClose}
+          />
         </ImageBackground>
       </View>
     </Modal>
@@ -73,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   rewardSection: {
-    marginBottom: windowHeight * 0.13,
+    marginBottom: windowHeight * 0.02,
   },
   textSection: {
     marginBottom: windowHeight * 0.1,

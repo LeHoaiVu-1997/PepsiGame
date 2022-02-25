@@ -112,3 +112,17 @@ export const updateUser = async (user: any) => {
   await firestore().collection('users').doc(user.phone_number).update(tempUser);
   return {success: true, user: user};
 };
+
+export const exchangeCombo = async (combo_amount: number) => {
+  let temp_rewards = [
+    {name: 'coins', description: '300 coins'},
+    {name: 'hat', description: 'Pepsi Bucket Hat'},
+  ];
+
+  let result = [];
+  for (var i = 0; i < combo_amount; i++) {
+    let reward = temp_rewards[Math.floor(Math.random() * temp_rewards.length)];
+    result.push(reward);
+  }
+  return {success: true, combo_rewards: result};
+};

@@ -16,6 +16,8 @@ const authorizedSlice = createSlice({
     reward: null,
     is_getting_reward: false,
     isUpdatingUser: false,
+    isExchangingCombo: false,
+    exchange_combo_result: [],
   },
   reducers: {
     incrementExchange: state => {
@@ -64,6 +66,21 @@ const authorizedSlice = createSlice({
     resetReward: state => {
       state.reward = null;
     },
+    exchangeComboBegin: state => {
+      state.isExchangingCombo = true;
+    },
+    exchangeComboSuccess: (state, action: PayloadAction<any>) => {
+      state.isExchangingCombo = false;
+      state.exchange_combo_result = action.payload;
+      console.log('action payload: ', action.payload);
+    },
+    exchangeComboFailed: state => {
+      state.isExchangingCombo = false;
+      state.exchange_combo_result = [];
+    },
+    resetExchangeComboResult: state => {
+      state.exchange_combo_result = [];
+    },
   },
 });
 
@@ -81,5 +98,9 @@ export const {
   updateUserBegin,
   updateUserSuccess,
   updateUserFailed,
+  exchangeComboBegin,
+  exchangeComboSuccess,
+  exchangeComboFailed,
+  resetExchangeComboResult,
 } = authorizedSlice.actions;
 export default authorizedSlice.reducer;

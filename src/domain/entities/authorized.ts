@@ -13,3 +13,9 @@ export interface UpdateUserResult {
   user: any;
   note?: string;
 }
+
+export interface ExchangeComboResult {
+  combo_rewards?: any;
+  success: boolean;
+  note?: string;
+}

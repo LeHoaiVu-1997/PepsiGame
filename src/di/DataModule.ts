@@ -1,3 +1,4 @@
+import {ExchangeComboUseCase} from './../domain/usecases/authorized/ExchangeCombo';
 import {UpdateUserUseCase} from './../domain/usecases/authorized/UpdateUser.use-case';
 import {GetRewardUseCase} from './../domain/usecases/authorized/GetReward.use-case';
 import {SignUpUseCase} from './../domain/usecases/authentication/SignUp.use-case';
@@ -24,5 +25,8 @@ export function registerDataDependencies() {
   });
   container.register('UpdateUserUseCase', {
     useClass: UpdateUserUseCase,
+  });
+  container.register('ExchangeComboUseCase', {
+    useClass: ExchangeComboUseCase,
   });
 }

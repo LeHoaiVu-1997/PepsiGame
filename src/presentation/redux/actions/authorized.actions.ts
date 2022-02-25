@@ -5,3 +5,4 @@ export const getReward = createAction('authorized/getReward');
 export const updateUser = createAction<UpdateUserPayload>(
   'authorized/updateUser',
 );
+export const exchangeCombo = createAction<number>('authorized/exchangeCombo');
