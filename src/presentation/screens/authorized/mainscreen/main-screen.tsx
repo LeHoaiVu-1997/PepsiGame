@@ -116,6 +116,7 @@ const MainScreen: React.FC = (props: any) => {
               activeStyle={styles.buttonWhite}
               titleStyle={styles.textButton}
               backgroundImage={BUTTON_WHITE}
+              onPress={() => navigation.navigate('Gifts details')}
             />
           </View>
           <LogoutPopup

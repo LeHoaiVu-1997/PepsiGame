@@ -12,6 +12,7 @@ export const SCREEN_SCAN = require('./screenscan.png');
 export const SCREEN_SIGN = require('./screensign.png');
 export const SCREEN_TERM = require('./screenterm.png');
 export const SCREEN_COLLECTION = require('./screencollection.png');
+export const SCREEN_GIFTS_DETAILS = require('./screengiftsdetails.png');
 export const BUTTON_RED = require('./defaultredbutton.png');
 export const BUTTON_WHITE = require('./defaultwhitebutton.png');
 export const BUTTON_INACTIVE = require('./defaultinactivebutton.png');

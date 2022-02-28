@@ -20,8 +20,6 @@ import {
   CAN_PEPSI,
   CAN_MIRINDA,
   CAN_SEVENUP,
-  REWARD_COINS,
-  REWARD_HAT,
 } from '../../../../../resource/images';
 import LogoutPopup from '../../../components/popup/logout-popup';
 import ImageButton from '../../../components/buttons/image-button';
@@ -130,6 +128,8 @@ const Collection: React.FC = (props: any) => {
     newUserData.collection.mirinda_cans -= comboAmount;
     newUserData.collection.pepsi_cans -= comboAmount;
     newUserData.collection.sevenup_cans -= comboAmount;
+
+    console.log('new user data: ', newUserData);
 
     dispatch(updateUser({user: newUserData}));
     dispatch(resetExchangeComboResult());
