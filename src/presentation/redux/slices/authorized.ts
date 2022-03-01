@@ -9,6 +9,7 @@ const authorizedSlice = createSlice({
       name: '',
       phone_number: '',
       collection: null,
+      gifts: [],
     },
     current_play_type: '', // get value either "exchange" or "free"
     name: '',
@@ -72,7 +73,7 @@ const authorizedSlice = createSlice({
     exchangeComboSuccess: (state, action: PayloadAction<any>) => {
       state.isExchangingCombo = false;
       state.exchange_combo_result = action.payload;
-      console.log('action payload: ', action.payload);
+      // console.log('action payload: ', action.payload);
     },
     exchangeComboFailed: state => {
       state.isExchangingCombo = false;

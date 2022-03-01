@@ -115,7 +115,6 @@ const Collection: React.FC = (props: any) => {
     setModalGiftRevealVisible(!modalGiftRevealVisible);
     setModalGiftVisible(!modalGiftVisible);
     dispatch(exchangeCombo(comboAmount));
-    setComboAmount(0);
   };
 
   const handleUpdateUser = () => {
@@ -125,14 +124,14 @@ const Collection: React.FC = (props: any) => {
         newUserData.collection.coins += 300;
       }
     }
+
     newUserData.collection.mirinda_cans -= comboAmount;
     newUserData.collection.pepsi_cans -= comboAmount;
     newUserData.collection.sevenup_cans -= comboAmount;
 
-    console.log('new user data: ', newUserData);
-
     dispatch(updateUser({user: newUserData}));
     dispatch(resetExchangeComboResult());
+    setComboAmount(0);
   };
 
   return (

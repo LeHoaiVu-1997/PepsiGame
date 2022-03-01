@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     marginVertical: windowHeight * 0.01,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   inactiveButton: {
     width: windowWidth * 0.7,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     marginVertical: windowHeight * 0.01,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   title: {
     color: 'white',
