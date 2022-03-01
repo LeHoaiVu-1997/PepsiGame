@@ -19,3 +19,9 @@ export interface ExchangeComboResult {
   success: boolean;
   note?: string;
 }
+
+export interface GetGiftStoreResult {
+  gifts?: any;
+  success: boolean;
+  note?: string;
+}

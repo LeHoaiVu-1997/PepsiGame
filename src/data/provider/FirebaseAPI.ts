@@ -117,6 +117,9 @@ export const exchangeCombo = async (combo_amount: number) => {
   let temp_rewards = [
     {name: 'coins', description: '300 coins'},
     {name: 'hat', description: 'Pepsi Bucket Hat'},
+    {name: 'jacket', description: 'Pepsi Jacket'},
+    {name: 'bag', description: 'Pepsi Tote Bag'},
+    {name: 'tumbler', description: 'Pepsi Tumbler'},
   ];
 
   let result = [];
@@ -125,4 +128,25 @@ export const exchangeCombo = async (combo_amount: number) => {
     result.push(reward);
   }
   return {success: true, combo_rewards: result};
+};
+
+export const getGiftStore = async () => {
+  const snapshot = await firestore()
+    .collection('gifts')
+    .get()
+    .catch(e => {
+      console.log('api error: ', e);
+    });
+
+  let result = [];
+  if (snapshot.size > 0) {
+    snapshot.forEach(doc => {
+      // console.log(doc.id, '=>', doc.data());
+      result.push(doc.data());
+    });
+    
+    return {success: true, gifts: result};
+  } else {
+    return {success: false, note: 'no gift'};
+  }
 };

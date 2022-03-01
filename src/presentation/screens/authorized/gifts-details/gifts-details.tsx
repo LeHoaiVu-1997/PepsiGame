@@ -8,6 +8,7 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import Header from '../../../components/header/header';
 import RectangleButton from '../../../components/buttons/rectangle-button';
@@ -25,21 +26,40 @@ import {
   BUTTON_WHITE,
 } from '../../../../../resource/images';
 import {RootState} from '../../../redux/store';
-import {FlatList} from 'react-native-gesture-handler';
+import {getGiftStore} from '../../../redux/actions/authorized.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const GiftsDetails: React.FC = (props: any) => {
   const {navigation} = props;
+  const dispatch = useDispatch();
+  const [showGiftStore, setShowGiftStore] = useState(true);
   const user = useSelector((state: RootState) => state.authorized.user);
+  const isGettingGiftStore = useSelector(
+    (state: RootState) => state.authorized.isGettingGiftStore,
+  );
+  const giftStore = useSelector(
+    (state: RootState) => state.authorized.gift_store,
+  );
+
+  useEffect(() => {
+    dispatch(getGiftStore());
+  }, []);
 
   const renderButtonContent = () => {
-    //  return renderExchangedGifts(user.gifts);
-    return renderGiftStore(user.gifts);
+    if (showGiftStore === true) {
+      if (isGettingGiftStore === false) {
+        return renderGiftStore(giftStore);
+      } else {
+        return;
+      }
+    } else {
+      return renderExchangedGifts(user.gifts);
+    }
   };
 
-  const renderGiftStore = giftStore => {
+  const renderGiftStore = _giftStore => {
     return (
       <View style={{alignItems: 'center'}}>
         <ImageBackground
@@ -55,7 +75,7 @@ const GiftsDetails: React.FC = (props: any) => {
         </View>
         <View style={styles.flatlist}>
           <FlatList
-            data={giftStore}
+            data={_giftStore}
             renderItem={flatlistRenderItem_GiftStore}
             numColumns={2}
           />
@@ -64,7 +84,7 @@ const GiftsDetails: React.FC = (props: any) => {
     );
   };
 
-  const flatlistRenderItem_GiftStore = ({item, index}) => {
+  const flatlistRenderItem_GiftStore = ({item}) => {
     let imgSource = REWARD_COINS;
     switch (item.name) {
       case 'hat':
@@ -88,8 +108,8 @@ const GiftsDetails: React.FC = (props: any) => {
           source={BACKGROUND_GIFT_AVAILABLE}
           style={styles.backgroundRed}
           resizeMode="cover">
-          <View style={styles.viewTextIndex}>
-            <Text style={styles.textIndex}>{`${index + 1}`}</Text>
+          <View style={styles.viewTextCoinsExchange}>
+            <Text style={styles.textCoinsExchange}>{`${item.coins}`}</Text>
           </View>
           <View style={styles.viewImages}>
             <Image source={imgSource} resizeMode="contain" />
@@ -97,9 +117,8 @@ const GiftsDetails: React.FC = (props: any) => {
           <View style={styles.viewTextDescription}>
             <Text style={styles.textDescriptionYellow}>{item.description}</Text>
             <View style={styles.viewTextDelivery}>
-              <Text style={styles.textDeliveryStatus}>{'Trạng thái: '}</Text>
               <Text
-                style={styles.textDeliveredTrue}>{`${item.delivered}`}</Text>
+                style={styles.textQuantity}>{`Còn lại: ${item.quantity}`}</Text>
             </View>
           </View>
           <RectangleButton
@@ -178,12 +197,26 @@ const GiftsDetails: React.FC = (props: any) => {
             <View style={styles.viewTextDelivery}>
               <Text style={styles.textDeliveryStatus}>{'Trạng thái: '}</Text>
               <Text
-                style={styles.textDeliveredTrue}>{`${item.delivered}`}</Text>
+                style={
+                  item.delivered
+                    ? styles.textDeliveredTrue
+                    : styles.textDeliveredFalse
+                }>
+                {item.delivered ? 'Đã nhận' : 'Chưa nhận'}
+              </Text>
             </View>
           </View>
         </ImageBackground>
       </View>
     );
+  };
+
+  const handleLeftButton = () => {
+    setShowGiftStore(true);
+  };
+
+  const handleRightButton = () => {
+    setShowGiftStore(false);
   };
 
   return (
@@ -203,11 +236,35 @@ const GiftsDetails: React.FC = (props: any) => {
         <View style={styles.contentContainer}>
           <View style={styles.topContainer}>
             <View style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.leftButton} onPress={() => {}}>
-                <Text style={styles.textButton}>{'Đổi quà'}</Text>
+              <TouchableOpacity
+                style={
+                  showGiftStore ? styles.leftButtonRed : styles.leftButtonWhite
+                }
+                onPress={handleLeftButton}>
+                <Text
+                  style={
+                    showGiftStore
+                      ? styles.textButtonWhite
+                      : styles.textButtonRed
+                  }>
+                  {'Đổi quà'}
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.rightButton} onPress={() => {}}>
-                <Text style={styles.textButton}>{'Quà của tôi'}</Text>
+              <TouchableOpacity
+                style={
+                  showGiftStore
+                    ? styles.rightButtonWhite
+                    : styles.rightButtonRed
+                }
+                onPress={handleRightButton}>
+                <Text
+                  style={
+                    showGiftStore
+                      ? styles.textButtonRed
+                      : styles.textButtonWhite
+                  }>
+                  {'Quà của tôi'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -242,7 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: windowHeight * 0.03,
   },
-  leftButton: {
+  leftButtonRed: {
     backgroundColor: 'red',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
@@ -251,7 +308,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  rightButton: {
+  leftButtonWhite: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    width: windowWidth * 0.38,
+    height: windowHeight * 0.05,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rightButtonRed: {
+    backgroundColor: 'red',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    width: windowWidth * 0.38,
+    height: windowHeight * 0.05,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rightButtonWhite: {
     backgroundColor: 'white',
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
@@ -260,9 +335,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textButton: {
+  textButtonRed: {
     fontSize: 18,
     fontWeight: '800',
+    color: 'red',
+  },
+  textButtonWhite: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: 'white',
   },
   flatlist: {
     marginTop: windowWidth * 0.03,
@@ -317,6 +398,16 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '800',
   },
+  viewTextCoinsExchange: {
+    alignItems: 'flex-end',
+    marginTop: windowHeight * 0.025,
+    marginRight: windowWidth * 0.03,
+  },
+  textCoinsExchange: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: '800',
+  },
   viewTextDescription: {
     marginTop: windowHeight * 0.012,
   },
@@ -344,6 +435,11 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'red',
     fontWeight: '900',
+  },
+  textQuantity: {
+    fontSize: 11,
+    color: 'white',
+    fontWeight: 'normal',
   },
   imageEmptyBox: {
     alignSelf: 'center',

@@ -6,3 +6,4 @@ export const updateUser = createAction<UpdateUserPayload>(
   'authorized/updateUser',
 );
 export const exchangeCombo = createAction<number>('authorized/exchangeCombo');
+export const getGiftStore = createAction('authorized/getGiftStore');

@@ -1,3 +1,4 @@
+import {GetGiftStoreUseCase} from './../domain/usecases/authorized/GetGiftStore.use-case';
 import {ExchangeComboUseCase} from './../domain/usecases/authorized/ExchangeCombo';
 import {UpdateUserUseCase} from './../domain/usecases/authorized/UpdateUser.use-case';
 import {GetRewardUseCase} from './../domain/usecases/authorized/GetReward.use-case';
@@ -28,5 +29,8 @@ export function registerDataDependencies() {
   });
   container.register('ExchangeComboUseCase', {
     useClass: ExchangeComboUseCase,
+  });
+  container.register('GetGiftStoreUseCase', {
+    useClass: GetGiftStoreUseCase,
   });
 }

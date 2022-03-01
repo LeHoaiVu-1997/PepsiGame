@@ -19,6 +19,8 @@ const authorizedSlice = createSlice({
     isUpdatingUser: false,
     isExchangingCombo: false,
     exchange_combo_result: [],
+    gift_store: [],
+    isGettingGiftStore: false,
   },
   reducers: {
     incrementExchange: state => {
@@ -73,7 +75,6 @@ const authorizedSlice = createSlice({
     exchangeComboSuccess: (state, action: PayloadAction<any>) => {
       state.isExchangingCombo = false;
       state.exchange_combo_result = action.payload;
-      // console.log('action payload: ', action.payload);
     },
     exchangeComboFailed: state => {
       state.isExchangingCombo = false;
@@ -81,6 +82,17 @@ const authorizedSlice = createSlice({
     },
     resetExchangeComboResult: state => {
       state.exchange_combo_result = [];
+    },
+    getGiftStoreBegin: state => {
+      state.isGettingGiftStore = true;
+    },
+    getGiftStoreSuccess: (state, action: PayloadAction<any>) => {
+      state.gift_store = action.payload;
+      state.isGettingGiftStore = false;
+    },
+    getGiftStoreFailed: state => {
+      state.isGettingGiftStore = false;
+      state.gift_store = [];
     },
   },
 });
@@ -103,5 +115,8 @@ export const {
   exchangeComboSuccess,
   exchangeComboFailed,
   resetExchangeComboResult,
+  getGiftStoreBegin,
+  getGiftStoreSuccess,
+  getGiftStoreFailed,
 } = authorizedSlice.actions;
 export default authorizedSlice.reducer;

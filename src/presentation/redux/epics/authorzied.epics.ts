@@ -1,3 +1,4 @@
+import {GetGiftStoreUseCase} from './../../../domain/usecases/authorized/GetGiftStore.use-case';
 import {UpdateUserUseCase} from './../../../domain/usecases/authorized/UpdateUser.use-case';
 import {GetRewardUseCase} from './../../../domain/usecases/authorized/GetReward.use-case';
 import {ExchangeComboUseCase} from '../../../domain/usecases/authorized/ExchangeCombo';
@@ -9,6 +10,7 @@ import {
   exchangeCombo,
   getReward,
   updateUser,
+  getGiftStore,
 } from '../actions/authorized.actions';
 import {
   getRewardBegin,
@@ -20,7 +22,9 @@ import {
   exchangeComboBegin,
   exchangeComboFailed,
   exchangeComboSuccess,
-  resetExchangeComboResult,
+  getGiftStoreBegin,
+  getGiftStoreSuccess,
+  getGiftStoreFailed,
 } from '../slices/authorized';
 
 const GetRewardEpic: Epic = action$ => {
@@ -83,8 +87,33 @@ const ExchangeComboEpic: Epic = action$ => {
   );
 };
 
+const GetGiftStoreEpic: Epic = action$ => {
+  return action$.pipe(
+    filter(getGiftStore.match),
+    switchMap(action => {
+      let usecase = container.resolve<GetGiftStoreUseCase>(
+        'GetGiftStoreUseCase',
+      );
+      return concat(
+        of(getGiftStoreBegin()),
+        usecase.call().pipe(
+          map(res => {
+            if (res.success === true) {
+              return getGiftStoreSuccess(res.gifts);
+            } else {
+              return getGiftStoreFailed();
+            }
+          }),
+          catchError(() => of(getGiftStoreFailed())),
+        ),
+      );
+    }),
+  );
+};
+
 export const AuthorizedEpics = combineEpics(
   GetRewardEpic,
   UpdateUserEpic,
   ExchangeComboEpic,
+  GetGiftStoreEpic,
 );
