@@ -115,6 +115,9 @@ const SignUp: React.FC = (props: any) => {
                       formik.setFieldValue('phoneNumber', value, true);
                     },
                   }}
+                  isInputInValid={
+                    formik.errors.phoneNumber === undefined ? false : true
+                  }
                 />
                 <TextInputField
                   errorLabel={formik.errors.userName}
@@ -125,6 +128,9 @@ const SignUp: React.FC = (props: any) => {
                       formik.setFieldValue('userName', value, true);
                     },
                   }}
+                  isInputInValid={
+                    formik.errors.userName === undefined ? false : true
+                  }
                 />
                 <View style={styles.checkboxContainer}>
                   <CheckBox

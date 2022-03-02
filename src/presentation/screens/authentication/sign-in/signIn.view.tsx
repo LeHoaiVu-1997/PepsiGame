@@ -125,6 +125,9 @@ const SignIn: React.FC = (props: any) => {
                       formik.setFieldValue('phoneNumber', value, true);
                     },
                   }}
+                  isInputInValid={
+                    formik.errors.phoneNumber === undefined ? false : true
+                  }
                 />
                 <Image
                   source={THREECANONE}

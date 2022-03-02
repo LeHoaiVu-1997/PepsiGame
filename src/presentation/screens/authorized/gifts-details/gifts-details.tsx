@@ -9,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import Header from '../../../components/header/header';
 import RectangleButton from '../../../components/buttons/rectangle-button';
@@ -27,6 +28,7 @@ import {
 } from '../../../../../resource/images';
 import {RootState} from '../../../redux/store';
 import {getGiftStore} from '../../../redux/actions/authorized.actions';
+import GiftFormModal from '../../../components/popup/gift-form-modal';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -35,6 +37,8 @@ const GiftsDetails: React.FC = (props: any) => {
   const {navigation} = props;
   const dispatch = useDispatch();
   const [showGiftStore, setShowGiftStore] = useState(true);
+  const [showGiftForm, setShowGiftForm] = useState(false);
+  const [slectedItem, setSelectedItem] = useState(null);
   const user = useSelector((state: RootState) => state.authorized.user);
   const isGettingGiftStore = useSelector(
     (state: RootState) => state.authorized.isGettingGiftStore,
@@ -125,12 +129,21 @@ const GiftsDetails: React.FC = (props: any) => {
             title="Đổi quà"
             titleStyle={styles.textButtonTitle}
             backgroundImage={BUTTON_WHITE}
-            onPress={() => {}}
+            onPress={() => handleExchangeGift(item)}
             activeStyle={styles.buttonExchangeGift}
           />
         </ImageBackground>
       </View>
     );
+  };
+
+  const handleExchangeGift = item => {
+    if (user.collection.coins < item.coins) {
+      Alert.alert('Bạn không đủ coins để đổi phần quà này!');
+    } else {
+      setShowGiftForm(!showGiftForm);
+      setSelectedItem(item);
+    }
   };
 
   const renderExchangedGifts = userGifts => {
@@ -270,6 +283,10 @@ const GiftsDetails: React.FC = (props: any) => {
           </View>
           <View style={styles.bottomContainer}>{renderButtonContent()}</View>
         </View>
+        <GiftFormModal
+          visible={showGiftForm}
+          onClose={() => setShowGiftForm(!showGiftForm)}
+        />
       </ImageBackground>
     </View>
   );
