@@ -19,6 +19,9 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import TextInputField from '../inputs/TextInputField';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useDispatch, useSelector} from 'react-redux';
+import {saveGiftData} from '../../redux/actions/authorized.actions';
+import {RootState} from '../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,6 +47,8 @@ const formSchema = Yup.object({
 
 const GiftFormModal: React.FC<SingleButtonsPopupProps> = props => {
   const {onPress, onClose, visible, payload, backgroundImage} = props;
+  const dispatch = useDispatch();
+  // const user = useSelector((state: RootState) => state.authorized.user);
 
   return (
     <Modal visible={visible} animationType="fade">
@@ -59,7 +64,8 @@ const GiftFormModal: React.FC<SingleButtonsPopupProps> = props => {
           </View>
           <View style={styles.viewTextGiftInfo}>
             <Text style={styles.textGiftInfo}>{'Quà của bạn: '}</Text>
-            <Text style={styles.textGiftName}>{'GIFT'}</Text>
+            <Text style={styles.textGiftName}>{`${payload.description}`}</Text>
+            {/* <Text style={styles.textGiftName}>{'Gift'}</Text> */}
           </View>
           <View style={styles.formsSection}>
             <Formik
@@ -71,7 +77,17 @@ const GiftFormModal: React.FC<SingleButtonsPopupProps> = props => {
               }}
               validationSchema={formSchema}
               onSubmit={values => {
-                console.log('values: ', values);
+                // console.log('values: ', values);
+                // console.log('payload: ', payload);
+                onPress();
+                let input = {
+                  gift: payload,
+                  user_information: {
+                    phone_number: values.phoneNumber,
+                    name: values.userName,
+                  },
+                };
+                dispatch(saveGiftData(input));
               }}>
               {formik => (
                 <KeyboardAwareScrollView>

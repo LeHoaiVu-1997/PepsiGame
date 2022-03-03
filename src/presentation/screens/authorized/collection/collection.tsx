@@ -120,8 +120,43 @@ const Collection: React.FC = (props: any) => {
   const handleUpdateUser = () => {
     let newUserData = JSON.parse(JSON.stringify(user));
     for (var i = 0; i < exchangeComboResult.length; i++) {
-      if (exchangeComboResult[i].name === 'coins') {
-        newUserData.collection.coins += 300;
+      // if (exchangeComboResult[i].name === 'coins') {
+      //   newUserData.collection.coins += 300;
+      // }
+      switch (exchangeComboResult[i].name) {
+        case 'coins':
+          newUserData.collection.coins += 300;
+          break;
+        case 'hat':
+          newUserData.gifts.push({
+            name: 'hat',
+            description: 'Pepsi Bucket Hat',
+            delivered: false,
+          });
+          break;
+        case 'jacket':
+          newUserData.gifts.push({
+            name: 'jacket',
+            description: 'Pepsi Jacket',
+            delivered: false,
+          });
+          break;
+        case 'bag':
+          newUserData.gifts.push({
+            name: 'bag',
+            description: 'Pepsi Tote Bag',
+            delivered: false,
+          });
+          break;
+        case 'tumbler':
+          newUserData.gifts.push({
+            name: 'tumbler',
+            description: 'Pepsi Tumbler',
+            delivered: false,
+          });
+          break;
+        default:
+          break;
       }
     }
 

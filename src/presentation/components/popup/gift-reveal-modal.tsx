@@ -2,22 +2,14 @@ import React, {useEffect} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Modal,
   Dimensions,
   ImageBackground,
-  Image,
 } from 'react-native';
 import ImageButton from '../buttons/image-button';
 import {
   EXCHANGE_COMBO_RESULT,
   BUTTON_CLOSE_WHITE,
-  REWARD_COINS,
-  REWARD_HAT,
-  BUTTON_BACKWARD_DISABLE,
-  BUTTON_BACKWARD_ENABLE,
-  BUTTON_FORWARD_DISABLE,
-  BUTTON_FORWARD_ENDABLE,
 } from '../../../../resource/images';
 import ImageCarousel from '../listviews/ImagesCarousel';
 
@@ -35,9 +27,10 @@ export interface ModalGiftRevealProps {
 const ModalGiftReveal: React.FC<ModalGiftRevealProps> = props => {
   const {visible, onClose, payload, backgoundImage, sideEffect} = props;
 
-  // useEffect(() => {
-  //   sideEffect();
-  // }, []);
+  useEffect(() => {
+    // sideEffect();
+    console.log('side effect');
+  }, []);
 
   const handleOnClose = () => {
     onClose();

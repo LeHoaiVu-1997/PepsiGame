@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Alert} from 'react-native';
 
 const authorizedSlice = createSlice({
   name: 'authorized',
@@ -21,6 +22,8 @@ const authorizedSlice = createSlice({
     exchange_combo_result: [],
     gift_store: [],
     isGettingGiftStore: false,
+    isSavingGiftData: false,
+    isSavedGiftDataSuccessful: false,
   },
   reducers: {
     incrementExchange: state => {
@@ -94,6 +97,21 @@ const authorizedSlice = createSlice({
       state.isGettingGiftStore = false;
       state.gift_store = [];
     },
+    saveGiftDataBegin: state => {
+      state.isSavingGiftData = true;
+    },
+    saveGiftDataSuccess: (state, action: PayloadAction<any>) => {
+      state.isSavingGiftData = false;
+      state.isSavedGiftDataSuccessful = action.payload.success;
+      state.user = action.payload.user_information;
+    },
+    saveGiftDataFailed: (state, action: PayloadAction<any>) => {
+      state.isSavingGiftData = false;
+      Alert.alert(action.payload.note);
+    },
+    resetIsSaveGiftDataSuccess: state => {
+      state.isSavedGiftDataSuccessful = false;
+    },
   },
 });
 
@@ -118,5 +136,9 @@ export const {
   getGiftStoreBegin,
   getGiftStoreSuccess,
   getGiftStoreFailed,
+  saveGiftDataBegin,
+  saveGiftDataSuccess,
+  saveGiftDataFailed,
+  resetIsSaveGiftDataSuccess,
 } = authorizedSlice.actions;
 export default authorizedSlice.reducer;

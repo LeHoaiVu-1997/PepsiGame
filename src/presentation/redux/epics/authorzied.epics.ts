@@ -11,6 +11,7 @@ import {
   getReward,
   updateUser,
   getGiftStore,
+  saveGiftData,
 } from '../actions/authorized.actions';
 import {
   getRewardBegin,
@@ -25,7 +26,11 @@ import {
   getGiftStoreBegin,
   getGiftStoreSuccess,
   getGiftStoreFailed,
+  saveGiftDataBegin,
+  saveGiftDataSuccess,
+  saveGiftDataFailed,
 } from '../slices/authorized';
+import {SaveGiftDataUseCase} from '../../../domain/usecases/authorized/SaveGiftData';
 
 const GetRewardEpic: Epic = action$ => {
   return action$.pipe(
@@ -111,9 +116,34 @@ const GetGiftStoreEpic: Epic = action$ => {
   );
 };
 
+const SaveGiftDataEpic: Epic = action$ => {
+  return action$.pipe(
+    filter(saveGiftData.match),
+    switchMap(action => {
+      let usecase = container.resolve<SaveGiftDataUseCase>(
+        'SaveGiftDataUseCase',
+      );
+      return concat(
+        of(saveGiftDataBegin()),
+        usecase.call(action.payload).pipe(
+          map(res => {
+            if (res.success === true) {
+              return saveGiftDataSuccess(res);
+            } else {
+              return saveGiftDataFailed(res);
+            }
+          }),
+          catchError(res => of(saveGiftDataFailed(res))),
+        ),
+      );
+    }),
+  );
+};
+
 export const AuthorizedEpics = combineEpics(
   GetRewardEpic,
   UpdateUserEpic,
   ExchangeComboEpic,
   GetGiftStoreEpic,
+  SaveGiftDataEpic,
 );

@@ -29,16 +29,26 @@ import {
 import {RootState} from '../../../redux/store';
 import {getGiftStore} from '../../../redux/actions/authorized.actions';
 import GiftFormModal from '../../../components/popup/gift-form-modal';
+import {resetIsSaveGiftDataSuccess} from '../../../redux/slices/authorized';
+import ModalMessageSuccess from '../../../components/popup/popup-message-success';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
+const defaultItem = {
+  id: 0,
+  name: '',
+  description: '',
+  coins: 0,
+  quantity: 0,
+};
 
 const GiftsDetails: React.FC = (props: any) => {
   const {navigation} = props;
   const dispatch = useDispatch();
   const [showGiftStore, setShowGiftStore] = useState(true);
   const [showGiftForm, setShowGiftForm] = useState(false);
-  const [slectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(defaultItem);
   const user = useSelector((state: RootState) => state.authorized.user);
   const isGettingGiftStore = useSelector(
     (state: RootState) => state.authorized.isGettingGiftStore,
@@ -46,10 +56,21 @@ const GiftsDetails: React.FC = (props: any) => {
   const giftStore = useSelector(
     (state: RootState) => state.authorized.gift_store,
   );
+  const isSavedGiftSuccessful = useSelector(
+    (state: RootState) => state.authorized.isSavedGiftDataSuccessful,
+  );
+  const [showModalMessageSuccess, setShowModalMessageSuccess] = useState(false);
 
   useEffect(() => {
     dispatch(getGiftStore());
   }, []);
+
+  useEffect(() => {
+    if (isSavedGiftSuccessful) {
+      setShowModalMessageSuccess(!showModalMessageSuccess);
+      dispatch(resetIsSaveGiftDataSuccess());
+    }
+  }, [isSavedGiftSuccessful]);
 
   const renderButtonContent = () => {
     if (showGiftStore === true) {
@@ -82,6 +103,7 @@ const GiftsDetails: React.FC = (props: any) => {
             data={_giftStore}
             renderItem={flatlistRenderItem_GiftStore}
             numColumns={2}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
@@ -141,8 +163,8 @@ const GiftsDetails: React.FC = (props: any) => {
     if (user.collection.coins < item.coins) {
       Alert.alert('Bạn không đủ coins để đổi phần quà này!');
     } else {
-      setShowGiftForm(!showGiftForm);
       setSelectedItem(item);
+      setShowGiftForm(!showGiftForm);
     }
   };
 
@@ -169,6 +191,7 @@ const GiftsDetails: React.FC = (props: any) => {
             data={userGifts}
             renderItem={flatListRenderItem_GiftExchanged}
             numColumns={2}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       );
@@ -286,6 +309,12 @@ const GiftsDetails: React.FC = (props: any) => {
         <GiftFormModal
           visible={showGiftForm}
           onClose={() => setShowGiftForm(!showGiftForm)}
+          payload={selectedItem}
+          onPress={() => setShowGiftForm(!showGiftForm)}
+        />
+        <ModalMessageSuccess
+          visible={showModalMessageSuccess}
+          onClose={() => setShowModalMessageSuccess(!showModalMessageSuccess)}
         />
       </ImageBackground>
     </View>
@@ -364,6 +393,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: windowWidth * 0.03,
+    flex: 1,
   },
   imageCoinBadge: {
     width: windowWidth * 0.25,

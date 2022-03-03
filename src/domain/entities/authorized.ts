@@ -25,3 +25,15 @@ export interface GetGiftStoreResult {
   success: boolean;
   note?: string;
 }
+
+export interface SaveGiftDataInput {
+  gift: any;
+  user_information: any;
+}
+
+export interface SaveGiftDataResult {
+  gift: any;
+  user_information: any;
+  success: boolean;
+  note?: string;
+}

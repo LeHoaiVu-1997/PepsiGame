@@ -3,6 +3,7 @@ import {
   ExchangeComboResult,
   GetGiftStoreResult,
   GetRewardResult,
+  SaveGiftDataResult,
   UpdateUserResult,
 } from '../../domain/entities/authorized';
 import {AuthorizedRepository} from './../../domain/repositories/AuthorziedRepository';
@@ -12,9 +13,13 @@ import {
   updateUser,
   exchangeCombo,
   getGiftStore,
+  saveGiftData,
 } from '../provider/FirebaseAPI';
 
 export class AuthorizedRepositoryImpl implements AuthorizedRepository {
+  saveGiftData(input: any): Observable<SaveGiftDataResult> {
+    return from(saveGiftData(input));
+  }
   getGiftStore(): Observable<GetGiftStoreResult> {
     return from(getGiftStore());
   }

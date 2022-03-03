@@ -14,8 +14,11 @@ import {
   BUTTON_BACKWARD_ENABLE,
   BUTTON_FORWARD_DISABLE,
   BUTTON_FORWARD_ENDABLE,
+  REWARD_BAG,
   REWARD_COINS,
   REWARD_HAT,
+  REWARD_JACKET,
+  REWARD_TUMBLER,
 } from '../../../../resource/images';
 
 const windowWidth = Dimensions.get('window').width;
@@ -69,10 +72,25 @@ const ImageCarousel: React.FC<ImageCarouselProps> = props => {
     }
   }, [currenIndex, images.length]);
 
+  const getRewardImage = name => {
+    switch (name) {
+      case 'hat':
+        return REWARD_HAT;
+      case 'jacket':
+        return REWARD_JACKET;
+      case 'bag':
+        return REWARD_BAG;
+      case 'tumbler':
+        return REWARD_TUMBLER;
+      default:
+        return REWARD_COINS;
+    }
+  };
+
   const renderImage = ({item}) => {
     return (
       <Image
-        source={item.name === 'coins' ? REWARD_COINS : REWARD_HAT}
+        source={getRewardImage(item.name)}
         resizeMode="contain"
         style={styles.image}
       />

@@ -1,3 +1,4 @@
+import {filter} from 'rxjs/operators';
 import firestore from '@react-native-firebase/firestore';
 import {Alert} from 'react-native';
 // import axios from 'axios';
@@ -19,8 +20,6 @@ export const getUser = async (phoneNumber: string) => {
   if (user !== undefined) {
     user.phone_number = phoneNumber;
   }
-  console.log('user: ', user);
-
   return user;
 };
 
@@ -105,6 +104,18 @@ export const getReward = async () => {
   }
 };
 
+export const getGift = async (id: string) => {
+  const doc = await firestore()
+    .collection('gifts')
+    .doc(id)
+    .get()
+    .catch(e => {
+      Alert.alert('Error: ', e);
+    });
+
+  return doc.data();
+};
+
 export const updateUser = async (user: any) => {
   let tempUser = JSON.parse(JSON.stringify(user));
   delete tempUser.phone_number;
@@ -142,11 +153,57 @@ export const getGiftStore = async () => {
   if (snapshot.size > 0) {
     snapshot.forEach(doc => {
       // console.log(doc.id, '=>', doc.data());
-      result.push(doc.data());
+      let item = doc.data();
+      item.id = doc.id;
+      result.push(item);
     });
-    
+
     return {success: true, gifts: result};
   } else {
     return {success: false, note: 'no gift'};
+  }
+};
+
+export const saveGiftData = async (input: any) => {
+  let user = await getUser(input.user_information.phone_number);
+
+  let gift = await getGift(input.gift.id);
+  // console.log('gift: ', gift);
+
+  if (user === undefined) {
+    return {
+      success: false,
+      gift: input.gift,
+      user_information: input.user_information,
+      note: 'user not available in database',
+    };
+  } else {
+    let tempUser = JSON.parse(JSON.stringify(user));
+    tempUser.gifts.push({
+      delivered: false,
+      name: input.gift.name,
+      description: input.gift.description,
+    });
+    tempUser.collection.coins -= input.gift.coins;
+    console.log('temp user: ', tempUser);
+
+    let temptGift = JSON.parse(JSON.stringify(gift));
+    temptGift.quantity -= 1;
+
+    // console.log('temptGift: ', temptGift);
+
+    await firestore()
+      .collection('users')
+      .doc(tempUser.phone_number)
+      .update(tempUser);
+
+    await firestore().collection('gifts').doc(input.gift.id).update(temptGift);
+
+    return {
+      success: true,
+      gift: input.gift,
+      user_information: tempUser,
+      note: 'save gift data successful',
+    };
   }
 };
