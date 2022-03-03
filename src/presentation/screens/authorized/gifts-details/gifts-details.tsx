@@ -31,6 +31,8 @@ import {getGiftStore} from '../../../redux/actions/authorized.actions';
 import GiftFormModal from '../../../components/popup/gift-form-modal';
 import {resetIsSaveGiftDataSuccess} from '../../../redux/slices/authorized';
 import ModalMessageSuccess from '../../../components/popup/popup-message-success';
+import LogoutPopup from '../../../components/popup/logout-popup';
+import {signOut} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -46,6 +48,7 @@ const defaultItem = {
 const GiftsDetails: React.FC = (props: any) => {
   const {navigation} = props;
   const dispatch = useDispatch();
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [showGiftStore, setShowGiftStore] = useState(true);
   const [showGiftForm, setShowGiftForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(defaultItem);
@@ -171,7 +174,7 @@ const GiftsDetails: React.FC = (props: any) => {
   const renderExchangedGifts = userGifts => {
     if (userGifts.length < 1 || userGifts === undefined || userGifts === null) {
       return (
-        <View>
+        <View style={styles.viewEmptyBox}>
           <Image
             source={EMPTY_BOX}
             resizeMode="contain"
@@ -267,6 +270,9 @@ const GiftsDetails: React.FC = (props: any) => {
             leftButtonAvailable={true}
             onPressLeftButton={() => navigation.goBack()}
             rightButtonAvailable={true}
+            onPressRightButton={() =>
+              setLogoutModalVisible(!logoutModalVisible)
+            }
           />
         </View>
         <View style={styles.contentContainer}>
@@ -315,6 +321,15 @@ const GiftsDetails: React.FC = (props: any) => {
         <ModalMessageSuccess
           visible={showModalMessageSuccess}
           onClose={() => setShowModalMessageSuccess(!showModalMessageSuccess)}
+        />
+        <LogoutPopup
+          visible={logoutModalVisible}
+          onPressConfirm={() => {
+            setLogoutModalVisible(!logoutModalVisible);
+            dispatch(signOut());
+            navigation.popToTop();
+          }}
+          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
         />
       </ImageBackground>
     </View>
@@ -393,6 +408,10 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: windowWidth * 0.03,
+    flex: 1,
+  },
+  viewEmptyBox: {
+    justifyContent: 'center',
     flex: 1,
   },
   imageCoinBadge: {

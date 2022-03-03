@@ -26,23 +26,26 @@ export const getUser = async (phoneNumber: string) => {
 export const signUp = async (credential: any) => {
   let user = await getUser(credential.phone_number);
   if (user === undefined) {
+    let rawData = {
+      name: credential.name,
+      play_time_free: 3,
+      play_time_exchange: 0,
+      collection: {
+        coins: 0,
+        pepsi_cans: 0,
+        mirinda_cans: 0,
+        sevenup_cans: 0,
+      },
+      gifts: [],
+      phone_number: credential.phone_number,
+    };
     await firestore()
       .collection('users')
       .doc(credential.phone_number)
-      .set({
-        name: credential.name,
-        play_time_free: 3,
-        play_time_exchange: 0,
-        collection: {
-          coins: 0,
-          pepsi_cans: 0,
-          mirinda_cans: 0,
-          sevenup_cans: 0,
-        },
-      })
-      .then(res => console.log('res: ', res));
+      .set(rawData)
+      .catch(error => console.log('sign up error: ', error));
 
-    return {success: true, data: credential};
+    return {success: true, data: rawData};
   } else {
     return {success: false, data: credential, note: 'user is aready exists'};
   }

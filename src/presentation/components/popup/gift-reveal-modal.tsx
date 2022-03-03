@@ -27,10 +27,9 @@ export interface ModalGiftRevealProps {
 const ModalGiftReveal: React.FC<ModalGiftRevealProps> = props => {
   const {visible, onClose, payload, backgoundImage, sideEffect} = props;
 
-  useEffect(() => {
-    // sideEffect();
-    console.log('side effect');
-  }, []);
+  // useEffect(() => {
+  //   sideEffect();
+  // }, []);
 
   const handleOnClose = () => {
     onClose();

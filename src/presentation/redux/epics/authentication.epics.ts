@@ -1,6 +1,7 @@
 import {
   requestOtp,
   signIn,
+  signOut,
   signUp,
   verifyOtp,
 } from '../actions/authentication.actions';
@@ -17,11 +18,12 @@ import {
   verifyOtpBegin,
   verifyOtpFailed,
   verifyOtpSuccess,
+  resetAllStateAuthentication,
 } from '../slices/authentication';
 import {of, concat} from 'rxjs';
 import {filter, switchMap, map, catchError} from 'rxjs/operators';
 import {Epic, combineEpics} from 'redux-observable';
-import {saveUser} from '../slices/authorized';
+import {resetAllStateAuthorized, saveUser} from '../slices/authorized';
 import {SignInUseCase} from '../../../domain/usecases/authentication/SignIn.use-case';
 import {container} from 'tsyringe';
 import {SignUpUseCase} from '../../../domain/usecases/authentication/SignUp.use-case';
@@ -56,9 +58,10 @@ const signUpEpic: Epic = action$ => {
         usecase.call(action.payload).pipe(
           switchMap(res => {
             if (res.success === true)
-              return [signUpSuccess(), signIn(res.data.phone_number)];
+              return [saveUser(res.data), signUpSuccess()];
             return [signUpFailed()];
           }),
+          catchError(() => of(signUpFailed())),
         ),
       );
     }),
@@ -100,10 +103,23 @@ const verifyOtpEpic: Epic = action$ => {
   );
 };
 
+const signOutEpic: Epic = action$ => {
+  return action$.pipe(
+    filter(signOut.match),
+    switchMap(() => {
+      return concat(
+        of(resetAllStateAuthentication()),
+        of(resetAllStateAuthorized()),
+      );
+    }),
+  );
+};
+
 export {getUserEpic, signUpEpic, requestOtpEpic, verifyOtpEpic};
 export const AuthenticationEpics = combineEpics(
   getUserEpic,
   signUpEpic,
   requestOtpEpic,
   verifyOtpEpic,
+  signOutEpic,
 );

@@ -10,3 +10,4 @@ export const requestOtp = createAction<string>('authentication/requestOtp');
 export const verifyOtp = createAction<VerifyOtpPayload>(
   'authentication/verifyOtp',
 );
+export const signOut = createAction('authentication/signOut');

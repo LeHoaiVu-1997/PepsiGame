@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -20,9 +20,7 @@ import RectangleButton from '../../../components/buttons/rectangle-button';
 import {SCREEN_SIGN} from '../../../../../resource/images';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
-import {saveConfirm} from '../../../redux/slices/authentication';
 import {RootState} from '../../../redux/store';
 import {
   signIn,
@@ -55,6 +53,15 @@ const SignIn: React.FC = (props: any) => {
   const otpConfirmation = useSelector(
     (state: RootState) => state.authentication.otpConfirmation,
   );
+  const [inputPhoneNumber, setInputPhoneNumber] = useState('');
+  const [fixedPhoneNumber, setFixedPhoneNumber] = useState('');
+
+  useEffect(() => {
+    let strings = inputPhoneNumber.split('');
+    strings[0] = '+84';
+    let result = strings.join('');
+    setFixedPhoneNumber(result);
+  }, [inputPhoneNumber]);
 
   useEffect(() => {
     handleSignInComplete();
@@ -64,20 +71,11 @@ const SignIn: React.FC = (props: any) => {
     handleRequestOtpComplete();
   }, [otpConfirmation]);
 
-  const handleSignIn = (phoneNumber: string) => {
-    dispatch(signIn({phone_number: phoneNumber}));
-  };
-
-  // const handleSignInComplete = async () => {
-  //   if (isUserConfirmed === true) {
-  //     const confirmation = await auth().signInWithPhoneNumber('+84971721198');
-  //     dispatch(saveConfirm(confirmation));
-  //     navigation.navigate('VerifyOTP');
-  //   }
-  // };
-
   const handleSignInComplete = () => {
     if (isUserConfirmed === true) {
+      // dispatch(requestOtp(fixedPhoneNumber));
+
+      // Default OTP 123456 from 0971721198
       dispatch(requestOtp('+84971721198'));
     }
   };
@@ -85,6 +83,16 @@ const SignIn: React.FC = (props: any) => {
   const handleRequestOtpComplete = () => {
     if (otpConfirmation != null) {
       navigation.navigate('VerifyOTP');
+    }
+  };
+
+  const handleSignIn = (phoneNumber: string) => {
+    if (phoneNumber.charAt(0) === '0') {
+      dispatch(signIn({phone_number: phoneNumber}));
+    } else {
+      Alert.alert(
+        'Số điện thoại không hợp lệ. Số điện thoại tại Việt Nam bắt đầu bằng số 0.',
+      );
     }
   };
 
@@ -123,6 +131,7 @@ const SignIn: React.FC = (props: any) => {
                     value: formik.values.phoneNumber,
                     onChangeText: (value: string) => {
                       formik.setFieldValue('phoneNumber', value, true);
+                      setInputPhoneNumber(value);
                     },
                   }}
                   isInputInValid={
@@ -144,7 +153,7 @@ const SignIn: React.FC = (props: any) => {
                 <RectangleButton
                   title="Đăng kí"
                   titleStyle={styles.titleSignUp}
-                  activeStyle={styles.buttonSignUp}
+                  // activeStyle={styles.buttonSignUp}
                   onPress={() => navigation.navigate('Sign up')}
                   backgroundImage={BUTTON_WHITE}
                 />

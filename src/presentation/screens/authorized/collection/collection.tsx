@@ -31,6 +31,7 @@ import {
   updateUser,
 } from '../../../redux/actions/authorized.actions';
 import {resetExchangeComboResult} from '../../../redux/slices/authorized';
+import { signOut } from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -186,12 +187,12 @@ const Collection: React.FC = (props: any) => {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.topContainer}>
-            <Text style={styles.textCoins}>{user.collection.coins}</Text>
-            <Image
+            <ImageBackground
               source={COIN_BADGE_BIGGER}
               resizeMode="contain"
-              style={styles.imageCoinBadge}
-            />
+              style={styles.imageCoinBadge}>
+              <Text style={styles.textCoins}>{user.collection.coins}</Text>
+            </ImageBackground>
             <Text style={styles.textCoinAmountExplainaion}>
               {'Số coins hiện tại của bạn'}
             </Text>
@@ -274,6 +275,7 @@ const Collection: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
+            dispatch(signOut());
             navigation.popToTop();
           }}
           onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
@@ -347,6 +349,9 @@ const styles = StyleSheet.create({
   },
   imageCoinBadge: {
     marginTop: windowHeight * 0.04,
+    width: windowWidth * 0.25,
+    height: windowHeight * 0.125,
+    justifyContent: 'center',
   },
   imageCan: {
     width: windowWidth * 0.2,
@@ -390,10 +395,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '900',
     color: 'white',
-    position: 'absolute',
-    left: windowWidth * 0.42,
-    top: windowHeight * 0.075,
-    zIndex: 1,
+    textAlign: 'center',
   },
 });
 

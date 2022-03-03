@@ -21,6 +21,7 @@ import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 import Header from '../../../components/header/header';
 import {setPlayType} from '../../../redux/slices/authorized';
 import OutOfPlayTime from '../../../components/popup/single-button-popup';
+import { signOut } from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -28,7 +29,6 @@ const windowHeight = Dimensions.get('window').height;
 const MainScreen: React.FC = (props: any) => {
   const {navigation} = props;
   const user = useSelector((state: RootState) => state.authorized.user);
-
   const playTimesExchange = user.play_time_exchange;
   const playTimesFree = user.play_time_free;
 
@@ -122,6 +122,7 @@ const MainScreen: React.FC = (props: any) => {
             visible={logoutModalVisible}
             onPressConfirm={() => {
               setLogoutModalVisible(!logoutModalVisible);
+              dispatch(signOut());
               navigation.popToTop();
             }}
             onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}

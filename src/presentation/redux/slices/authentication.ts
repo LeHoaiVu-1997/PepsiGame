@@ -1,18 +1,21 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 
+const INITIAL_STATE = {
+  otpConfirmation: null,
+  isAuthenticating: false,
+  isSigningUp: false,
+  isSignUpSuccessful: false,
+  isRequestingOtp: false,
+  isVeryfingOtp: false,
+  verifyOtpFailureNote: '',
+  isUserConfirmed: false,
+  isOtpValid: false,
+};
+
 const authenticationSlice = createSlice({
   name: 'authentication',
-  initialState: {
-    otpConfirmation: null,
-    isAuthenticating: false,
-    isSigningUp: false,
-    isRequestingOtp: false,
-    isVeryfingOtp: false,
-    verifyOtpFailureNote: '',
-    isUserConfirmed: false,
-    isOtpValid: false,
-  },
+  initialState: INITIAL_STATE,
   reducers: {
     saveConfirm: (state, action: PayloadAction<any>) => {
       state.otpConfirmation = action.payload;
@@ -40,12 +43,14 @@ const authenticationSlice = createSlice({
     },
     signUpSuccess: state => {
       state.isSigningUp = false;
-      // state.isUserConfirmed = true;
+      state.isSignUpSuccessful = true;
     },
     signUpFailed: state => {
       state.isSigningUp = false;
-      // state.isUserConfirmed = false;
       Alert.alert('Đăng kí thất bại!');
+    },
+    resetIsSginUpSuccessful: state => {
+      state.isSignUpSuccessful = false;
     },
     requestOtpBegin: state => {
       state.isRequestingOtp = true;
@@ -70,6 +75,7 @@ const authenticationSlice = createSlice({
       state.isOtpValid = false;
       state.verifyOtpFailureNote = action.payload.note;
     },
+    resetAllStateAuthentication: () => INITIAL_STATE,
   },
 });
 
@@ -83,11 +89,13 @@ export const {
   signUpBegin,
   signUpSuccess,
   signUpFailed,
+  resetIsSginUpSuccessful,
   requestOtpBegin,
   requestOtpFailed,
   requestOtpSuccess,
   verifyOtpBegin,
   verifyOtpFailed,
   verifyOtpSuccess,
+  resetAllStateAuthentication,
 } = authenticationSlice.actions;
 export default authenticationSlice.reducer;

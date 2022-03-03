@@ -17,6 +17,7 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from '../../../redux/store';
 import {getReward} from '../../../redux/actions/authorized.actions';
+import { signOut } from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -105,6 +106,7 @@ const Game: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
+            dispatch(signOut());
             navigation.popToTop();
           }}
           onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}

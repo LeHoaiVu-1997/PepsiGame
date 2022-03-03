@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import TextInputField from '../../../components/inputs/TextInputField';
@@ -15,8 +16,6 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {BUTTON_WHITE, SCREEN_SIGN} from '../../../../../resource/images';
 import {useDispatch, useSelector} from 'react-redux';
-import {saveConfirm} from '../../../redux/slices/authentication';
-import auth from '@react-native-firebase/auth';
 import {
   requestOtp,
   signUp,
@@ -45,18 +44,28 @@ const SignUp: React.FC = (props: any) => {
   const {navigation} = props;
   const [termRead, setTermRead] = useState(false);
   const dispatch = useDispatch();
-  const isUserConfirmed = useSelector(
-    (state: RootState) => state.authentication.isUserConfirmed,
+  const isSignUpSuccessful = useSelector(
+    (state: RootState) => state.authentication.isSignUpSuccessful,
   );
   const otpConfirmation = useSelector(
     (state: RootState) => state.authentication.otpConfirmation,
   );
 
+  const [inputPhoneNumber, setInputPhoneNumber] = useState('');
+  const [fixedPhoneNumber, setFixedPhoneNumber] = useState('');
+
   useEffect(() => {
-    if (isUserConfirmed === true) {
+    let strings = inputPhoneNumber.split('');
+    strings[0] = '+84';
+    let result = strings.join('');
+    setFixedPhoneNumber(result);
+  }, [inputPhoneNumber]);
+
+  useEffect(() => {
+    if (isSignUpSuccessful === true) {
       handleSignUpSuccess();
     }
-  }, [isUserConfirmed]);
+  }, [isSignUpSuccessful]);
 
   useEffect(() => {
     handleRequestOtpComplete();
@@ -70,13 +79,20 @@ const SignUp: React.FC = (props: any) => {
   };
 
   const handleSignUp = async (phoneNumber: string, userName: string) => {
-    dispatch(signUp({name: userName, phone_number: phoneNumber}));
+    if (phoneNumber.charAt(0) === '0') {
+      dispatch(signUp({name: userName, phone_number: phoneNumber}));
+    } else {
+      Alert.alert(
+        'Số điện thoại không hợp lệ. Số điện thoại tại Việt Nam bắt đầu bằng số 0.',
+      );
+    }
   };
 
   const handleSignUpSuccess = async () => {
-    if (isUserConfirmed === true) {
-      dispatch(requestOtp('+84971721198'));
-    }
+    // dispatch(requestOtp(fixedPhoneNumber));
+
+    // Default OTP 123456 from 0971721198
+    dispatch(requestOtp('+84971721198'));
   };
 
   const handleRequestOtpComplete = () => {
@@ -113,6 +129,7 @@ const SignUp: React.FC = (props: any) => {
                     value: formik.values.phoneNumber,
                     onChangeText: (value: string) => {
                       formik.setFieldValue('phoneNumber', value, true);
+                      setInputPhoneNumber(value);
                     },
                   }}
                   isInputInValid={
@@ -134,19 +151,23 @@ const SignUp: React.FC = (props: any) => {
                 />
                 <View style={styles.checkboxContainer}>
                   <CheckBox
+                    style={styles.checkbox}
                     value={termRead}
                     onValueChange={() => setTermRead(!termRead)}
                     boxType={'square'}
                     onFillColor={'white'}
+                    tintColor="white"
                   />
-                  <Text style={styles.checkboxText}>
-                    {'Tôi đã đọc và đồng ý với'}
-                  </Text>
-                  <TextButton
-                    title=" thể lệ chương trình "
-                    onPress={() => navigation.navigate('Term of Service')}
-                  />
-                  <Text style={styles.checkboxText}>{'Pepsi Tết'}</Text>
+                  <View style={styles.viewCheckboxText}>
+                    <Text style={styles.checkboxText}>
+                      {'Tôi đã đọc và đồng ý với'}
+                    </Text>
+                    <TextButton
+                      title=" thể lệ chương trình "
+                      onPress={() => navigation.navigate('Term of Service')}
+                    />
+                    <Text style={styles.checkboxText}>{'Pepsi Tết'}</Text>
+                  </View>
                 </View>
                 <RectangleButton
                   onPress={formik.submitForm}
@@ -157,7 +178,7 @@ const SignUp: React.FC = (props: any) => {
                 <RectangleButton
                   title="Đăng nhập"
                   titleStyle={styles.titleSignUp}
-                  activeStyle={styles.buttonSignUp}
+                  // activeStyle={styles.buttonSignUp}
                   onPress={() => navigation.navigate('Sign in')}
                   backgroundImage={BUTTON_WHITE}
                 />
@@ -188,6 +209,11 @@ const styles = StyleSheet.create({
     // backgroundColor: '#035efc',
     paddingHorizontal: windowWidth * 0.05,
   },
+  checkbox: {
+    width: windowWidth * 0.04,
+    height: windowHeight * 0.02,
+    marginLeft: windowWidth * 0.01,
+  },
   textWelcome: {
     fontSize: 20,
     fontWeight: '400',
@@ -207,6 +233,7 @@ const styles = StyleSheet.create({
   textOr: {
     color: 'white',
     alignSelf: 'center',
+    fontWeight: 'bold',
   },
   buttonSignUp: {
     width: '70%',
@@ -223,6 +250,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   checkboxContainer: {
+    flexDirection: 'row',
+  },
+  viewCheckboxText: {
+    marginLeft: windowWidth * 0.02,
     flexDirection: 'row',
   },
   checkboxText: {

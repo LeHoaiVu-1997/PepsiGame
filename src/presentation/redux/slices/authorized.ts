@@ -1,30 +1,32 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 
-const authorizedSlice = createSlice({
-  name: 'authorized',
-  initialState: {
-    user: {
-      play_time_exchange: 0,
-      play_time_free: 0,
-      name: '',
-      phone_number: '',
-      collection: null,
-      gifts: [],
-    },
-    current_play_type: '', // get value either "exchange" or "free"
+const INITIAL_STATE = {
+  user: {
+    play_time_exchange: 0,
+    play_time_free: 0,
     name: '',
     phone_number: '',
-    reward: null,
-    is_getting_reward: false,
-    isUpdatingUser: false,
-    isExchangingCombo: false,
-    exchange_combo_result: [],
-    gift_store: [],
-    isGettingGiftStore: false,
-    isSavingGiftData: false,
-    isSavedGiftDataSuccessful: false,
+    collection: {},
+    gifts: [],
   },
+  current_play_type: '', // get value either "exchange" or "free"
+  name: '',
+  phone_number: '',
+  reward: null,
+  is_getting_reward: false,
+  isUpdatingUser: false,
+  isExchangingCombo: false,
+  exchange_combo_result: [],
+  gift_store: [],
+  isGettingGiftStore: false,
+  isSavingGiftData: false,
+  isSavedGiftDataSuccessful: false,
+};
+
+const authorizedSlice = createSlice({
+  name: 'authorized',
+  initialState: INITIAL_STATE,
   reducers: {
     incrementExchange: state => {
       state.user.play_time_exchange += 1;
@@ -112,6 +114,7 @@ const authorizedSlice = createSlice({
     resetIsSaveGiftDataSuccess: state => {
       state.isSavedGiftDataSuccessful = false;
     },
+    resetAllStateAuthorized: () => INITIAL_STATE,
   },
 });
 
@@ -140,5 +143,6 @@ export const {
   saveGiftDataSuccess,
   saveGiftDataFailed,
   resetIsSaveGiftDataSuccess,
+  resetAllStateAuthorized,
 } = authorizedSlice.actions;
 export default authorizedSlice.reducer;

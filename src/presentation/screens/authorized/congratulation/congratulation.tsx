@@ -21,6 +21,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../redux/store';
 import {updateUser} from '../../../redux/actions/authorized.actions';
 import {resetReward} from '../../../redux/slices/authorized';
+import { signOut } from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -152,6 +153,7 @@ const Congratulation: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
+            dispatch(signOut());
             navigation.popToTop();
           }}
           onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
