@@ -409,6 +409,7 @@ const styles = StyleSheet.create({
   flatlist: {
     marginTop: windowWidth * 0.03,
     flex: 1,
+    paddingBottom: windowHeight * 0.02,
   },
   viewEmptyBox: {
     justifyContent: 'center',
