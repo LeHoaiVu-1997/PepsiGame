@@ -12,27 +12,28 @@ import Header from '../../../components/header/header';
 import LogoutPopup from '../../../components/popup/logout-popup';
 import RectangleButton from '../../../components/buttons/rectangle-button';
 import {SCREEN_SCAN} from '../../../../../resource/images';
+import ModalScanCodeFailed from '../../../components/popup/popup-scan-fail';
+import ModalScanCodeSuccessful from '../../../components/popup/popup-scan-success';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const ScanCode: React.FC = (props: any) => {
   const {navigation} = props;
-  const [codeContent, setCodeContent] = useState(null);
+  const [codeContent, setCodeContent] = useState('');
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
-  const [camReactivate, setCamReactivate] = useState(false);
+  const [showModalScanFail, setShowModalScanFail] = useState(false);
+  const [showModalScanSuccess, setShowModalScanSuccess] = useState(true);
 
   let scanner;
 
-  console.log(camReactivate);
-
   const onSuccess = e => {
     let data = e.data;
-    Alert.alert('Mã QR code có nội dung: ', data);
+    // Alert.alert('Mã QR code có nội dung: ', data);
+    setShowModalScanFail(!showModalScanFail);
   };
 
   const reactivateCamera = () => {
-    // setCamReactivate(!camReactivate);
     scanner.reactivate();
   };
 
@@ -72,6 +73,16 @@ const ScanCode: React.FC = (props: any) => {
             navigation.popToTop();
           }}
           onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+        />
+        <ModalScanCodeFailed
+          visible={showModalScanFail}
+          onPress={() => setShowModalScanFail(!showModalScanFail)}
+        />
+        <ModalScanCodeSuccessful
+          visible={showModalScanSuccess}
+          onClose={() => setShowModalScanSuccess(!showModalScanSuccess)}
+          onPressFirst={() => setShowModalScanSuccess(!showModalScanSuccess)}
+          onPressSecond={() => setShowModalScanSuccess(!showModalScanSuccess)}
         />
       </ImageBackground>
     </View>

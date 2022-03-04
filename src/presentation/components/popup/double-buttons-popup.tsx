@@ -14,7 +14,8 @@ export interface DoubleButtonsPopupProps {
   //   secondButtonDisable?: boolean;
   onClose?: () => void;
   visible: boolean;
-  data: any;
+  data?: any;
+  backgroundImage?: any;
 }
 
 const PlayTimesSelection: React.FC<DoubleButtonsPopupProps> = props => {

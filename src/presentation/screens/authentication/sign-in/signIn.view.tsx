@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     color: '#0063A7',
     fontSize: 25,
     alignSelf: 'center',
+    fontWeight: 'bold',
   },
 });
 
