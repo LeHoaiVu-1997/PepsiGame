@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  Platform,
 } from 'react-native';
 import Header from '../../../components/header/header';
 import RectangleButton from '../../../components/buttons/rectangle-button';
@@ -155,7 +156,14 @@ const GiftsDetails: React.FC = (props: any) => {
             titleStyle={styles.textButtonTitle}
             backgroundImage={BUTTON_WHITE}
             onPress={() => handleExchangeGift(item)}
-            activeStyle={styles.buttonExchangeGift}
+            activeStyle={
+              Platform.OS === 'android'
+                ? {
+                    ...styles.buttonExchangeGift,
+                    ...{marginTop: -windowHeight * 0.001},
+                  }
+                : styles.buttonExchangeGift
+            }
           />
         </ImageBackground>
       </View>
