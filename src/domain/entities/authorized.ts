@@ -28,12 +28,14 @@ export interface GetGiftStoreResult {
 
 export interface SaveGiftDataInput {
   gift: any;
-  user_information: any;
+  receiver: any;
+  purchaser: any;
 }
 
 export interface SaveGiftDataResult {
   gift: any;
-  user_information: any;
+  receiver: any;
+  purchaser: any;
   success: boolean;
   note?: string;
 }

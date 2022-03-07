@@ -168,44 +168,51 @@ export const getGiftStore = async () => {
 };
 
 export const saveGiftData = async (input: any) => {
-  let user = await getUser(input.user_information.phone_number);
+  let receiver = await getUser(input.receiver.phone_number);
+  let purchaser = await getUser(input.purchaser.phone_number);
 
   let gift = await getGift(input.gift.id);
   // console.log('gift: ', gift);
 
-  if (user === undefined) {
+  if (receiver === undefined) {
     return {
       success: false,
       gift: input.gift,
       user_information: input.user_information,
-      note: 'user not available in database',
+      note: 'Thông tin người nhận không tồn tại!',
     };
   } else {
-    let tempUser = JSON.parse(JSON.stringify(user));
-    tempUser.gifts.push({
+    // Update reveiver
+    let tempReceiver = JSON.parse(JSON.stringify(receiver));
+    tempReceiver.gifts.push({
       delivered: false,
       name: input.gift.name,
       description: input.gift.description,
     });
-    tempUser.collection.coins -= input.gift.coins;
-    console.log('temp user: ', tempUser);
 
     let temptGift = JSON.parse(JSON.stringify(gift));
     temptGift.quantity -= 1;
-
-    // console.log('temptGift: ', temptGift);
-
     await firestore()
       .collection('users')
-      .doc(tempUser.phone_number)
-      .update(tempUser);
+      .doc(tempReceiver.phone_number)
+      .update(tempReceiver);
 
+    // Update gift store
     await firestore().collection('gifts').doc(input.gift.id).update(temptGift);
+
+    // Update purchaser
+    let tempPurchaser = JSON.parse(JSON.stringify(purchaser));
+    tempPurchaser.collection.coins -= input.gift.coins;
+    await firestore()
+      .collection('users')
+      .doc(tempPurchaser.phone_number)
+      .update(tempPurchaser);
 
     return {
       success: true,
       gift: input.gift,
-      user_information: tempUser,
+      purchaser: tempPurchaser,
+      receiver: tempReceiver,
       note: 'save gift data successful',
     };
   }

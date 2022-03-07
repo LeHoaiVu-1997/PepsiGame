@@ -54,6 +54,8 @@ const GiftsDetails: React.FC = (props: any) => {
   const [showGiftForm, setShowGiftForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(defaultItem);
   const user = useSelector((state: RootState) => state.authorized.user);
+  console.log('user: ', user);
+
   const isGettingGiftStore = useSelector(
     (state: RootState) => state.authorized.isGettingGiftStore,
   );

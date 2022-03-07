@@ -37,6 +37,18 @@ const ModalScanCodeSuccessful: React.FC<DoubleButtonsPopupProps> = props => {
           />
           <View style={styles.viewTextContent}>
             <Text style={styles.textTitle}>{'Bạn nhận được'}</Text>
+            <Text
+              style={
+                styles.textPlayTimeExchange
+              }>{`${data.play_times_exchange}`}</Text>
+            <Text style={styles.textPlayTimes}>{'Lượt chơi'}</Text>
+            <View style={styles.viewTextTotalPlayTimes}>
+              <Text style={styles.textTotalPlayTimes}>{'Bạn đang có '}</Text>
+              <Text style={styles.textTotalPlayTimesHightLight}>
+                {data.total_play_times}
+              </Text>
+              <Text style={styles.textTotalPlayTimes}>{' lượt chơi'}</Text>
+            </View>
           </View>
           <View style={styles.viewButton}>
             <RectangleButton
@@ -78,6 +90,35 @@ const styles = StyleSheet.create({
     fontSize: 21,
     color: 'black',
     fontWeight: 'normal',
+    textAlign: 'center',
+  },
+  textPlayTimeExchange: {
+    fontSize: 80,
+    color: '#0B5697',
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  textPlayTimes: {
+    fontSize: 24,
+    color: 'black',
+    fontWeight: 'normal',
+    textAlign: 'center',
+  },
+  viewTextTotalPlayTimes: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: windowHeight * 0.04,
+  },
+  textTotalPlayTimes: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'normal',
+    textAlign: 'center',
+  },
+  textTotalPlayTimesHightLight: {
+    fontSize: 16,
+    color: '#0B5697',
+    fontWeight: '900',
     textAlign: 'center',
   },
   buttonClose: {

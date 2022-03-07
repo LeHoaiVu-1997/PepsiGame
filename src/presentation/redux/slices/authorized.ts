@@ -105,7 +105,7 @@ const authorizedSlice = createSlice({
     saveGiftDataSuccess: (state, action: PayloadAction<any>) => {
       state.isSavingGiftData = false;
       state.isSavedGiftDataSuccessful = action.payload.success;
-      state.user = action.payload.user_information;
+      state.user = action.payload.purchaser;
     },
     saveGiftDataFailed: (state, action: PayloadAction<any>) => {
       state.isSavingGiftData = false;

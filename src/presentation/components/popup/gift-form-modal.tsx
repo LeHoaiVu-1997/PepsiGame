@@ -48,7 +48,7 @@ const formSchema = Yup.object({
 const GiftFormModal: React.FC<SingleButtonsPopupProps> = props => {
   const {onPress, onClose, visible, payload, backgroundImage} = props;
   const dispatch = useDispatch();
-  // const user = useSelector((state: RootState) => state.authorized.user);
+  const user = useSelector((state: RootState) => state.authorized.user);
 
   return (
     <Modal visible={visible} animationType="fade">
@@ -82,9 +82,13 @@ const GiftFormModal: React.FC<SingleButtonsPopupProps> = props => {
                 onPress();
                 let input = {
                   gift: payload,
-                  user_information: {
+                  receiver: {
                     phone_number: values.phoneNumber,
                     name: values.userName,
+                  },
+                  purchaser: {
+                    phone_number: user.phone_number,
+                    name: user.name,
                   },
                 };
                 dispatch(saveGiftData(input));

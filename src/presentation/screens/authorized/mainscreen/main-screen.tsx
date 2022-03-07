@@ -21,7 +21,7 @@ import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 import Header from '../../../components/header/header';
 import {setPlayType} from '../../../redux/slices/authorized';
 import OutOfPlayTime from '../../../components/popup/single-button-popup';
-import { signOut } from '../../../redux/actions/authentication.actions';
+import {signOut} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -31,6 +31,9 @@ const MainScreen: React.FC = (props: any) => {
   const user = useSelector((state: RootState) => state.authorized.user);
   const playTimesExchange = user.play_time_exchange;
   const playTimesFree = user.play_time_free;
+
+  console.log('playTimesExchange : ', playTimesExchange);
+  console.log('playTimesFree : ', playTimesFree);
 
   const dispatch = useDispatch();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
