@@ -19,7 +19,7 @@ const TextButton: React.FC<ITextButton> = props => {
 const styles = StyleSheet.create({
   title: {
     color: 'yellow',
-    fontStyle: 'italic',
+    // fontStyle: 'italic',
     fontSize: 12,
     fontWeight: 'bold',
   },

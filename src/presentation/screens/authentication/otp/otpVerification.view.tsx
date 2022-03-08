@@ -12,13 +12,18 @@ import RectangleButton from '../../../components/buttons/rectangle-button';
 import {SCREEN_SIGN} from '../../../../../resource/images';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../redux/store';
-import {verifyOtp} from '../../../redux/actions/authentication.actions';
+import {
+  verifyOtp,
+  requestOtp,
+} from '../../../redux/actions/authentication.actions';
+import TextButton from '../../../components/buttons/text-button';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const VerifyOtp: React.FC = (props: any) => {
   const {navigation} = props;
+  const {phone_number} = props.route.params;
   const [otp, setOtp] = useState(new Array(6).fill(''));
   const [wrongOtp, setWrongOtp] = useState(false);
   const [codeFilled, setCodeFilled] = useState(false);
@@ -89,6 +94,10 @@ const VerifyOtp: React.FC = (props: any) => {
     //   setWrongOtp(true);
     // }
     dispatch(verifyOtp({otp: otp.join(''), confirm: otpConfirmation}));
+  };
+
+  const handleResendOTP = (phoneNumber: string) => {
+    dispatch(requestOtp(phoneNumber));
   };
 
   return (
@@ -199,6 +208,16 @@ const VerifyOtp: React.FC = (props: any) => {
                 disabled={!codeFilled}
               />
             </View>
+            <View style={styles.viewResendOTP}>
+              <Text style={styles.textResendOTP}>
+                {'Bạn chưa nhận được mã? '}
+              </Text>
+              <TextButton
+                title={'Gửi lại mã'}
+                titleStyle={styles.textButtonResendOTP}
+                onPress={() => handleResendOTP(phone_number)}
+              />
+            </View>
           </KeyboardAwareScrollView>
         </View>
       </ImageBackground>
@@ -290,6 +309,18 @@ const styles = StyleSheet.create({
     color: '#0063A7',
     fontSize: 25,
     alignSelf: 'center',
+  },
+  viewResendOTP: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  textResendOTP: {
+    fontSize: 16,
+    color: 'white',
+  },
+  textButtonResendOTP: {
+    fontSize: 16,
+    color: 'yellow',
   },
 });
 

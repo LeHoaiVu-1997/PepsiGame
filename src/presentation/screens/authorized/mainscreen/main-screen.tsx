@@ -21,7 +21,6 @@ import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 import Header from '../../../components/header/header';
 import {setPlayType} from '../../../redux/slices/authorized';
 import OutOfPlayTime from '../../../components/popup/single-button-popup';
-import {signOut} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

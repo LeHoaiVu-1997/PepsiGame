@@ -82,7 +82,7 @@ const SignIn: React.FC = (props: any) => {
 
   const handleRequestOtpComplete = () => {
     if (otpConfirmation != null) {
-      navigation.navigate('VerifyOTP');
+      navigation.navigate('VerifyOTP', {phone_number: fixedPhoneNumber});
     }
   };
 
