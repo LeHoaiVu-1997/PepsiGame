@@ -118,12 +118,12 @@ const Congratulation: React.FC = (props: any) => {
         newUserData.collection.pepsi_cans += 1;
         break;
       case 'mirinda':
-        console.log('mirinda');
+        // console.log('mirinda');
 
         newUserData.collection.mirinda_cans += 1;
         break;
       case 'sevenup':
-        console.log('sevenup');
+        // console.log('sevenup');
 
         newUserData.collection.sevenup_cans += 1;
         break;
@@ -153,10 +153,11 @@ const Congratulation: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
-            dispatch(signOut());
-            navigation.popToTop();
           }}
-          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+          onPressCancel={() => setLogoutModalVisible(!logoutModalVisible)}
+          sideEffect={() => {
+            navigation.navigate('Sign in');
+          }}
         />
       </ImageBackground>
     </View>

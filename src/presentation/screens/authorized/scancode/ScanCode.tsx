@@ -92,9 +92,11 @@ const ScanCode: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
-            navigation.popToTop();
           }}
-          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+          onPressCancel={() => setLogoutModalVisible(!logoutModalVisible)}
+          sideEffect={() => {
+            navigation.navigate('Sign in');
+          }}
         />
         <ModalScanCodeFailed
           visible={showModalScanFail}

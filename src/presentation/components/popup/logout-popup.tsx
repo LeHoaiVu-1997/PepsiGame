@@ -1,19 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, Text, Modal, Dimensions} from 'react-native';
 import RectangleButton from '../buttons/rectangle-button';
 import {BUTTON_WHITE} from '../../../../resource/images';
+import {useSelector, useDispatch} from 'react-redux';
+import {signOut} from '../../redux/actions/authentication.actions';
+import {RootState} from '../../redux/store';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export interface LogoutPopup {
-  onPressConfirm?: () => void;
-  onPressCanel?: () => void;
   visible: boolean;
+  onPressConfirm: () => void;
+  onPressCancel: () => void;
+  sideEffect: () => void;
 }
 
 const LogoutPopup: React.FC<LogoutPopup> = props => {
-  const {onPressConfirm, onPressCanel, visible} = props;
+  const {visible, onPressCancel, onPressConfirm, sideEffect} = props;
+  const dispatch = useDispatch();
+  const isSignedOut = useSelector(
+    (state: RootState) => state.authentication.isSignedOut,
+  );
+
+  useEffect(() => {
+    if (isSignedOut === true) {
+      sideEffect();
+    }
+  }, [isSignedOut]);
+
+  const handleConfirm = () => {
+    onPressConfirm();
+    dispatch(signOut());
+  };
+
   return (
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.container}>
@@ -31,14 +51,14 @@ const LogoutPopup: React.FC<LogoutPopup> = props => {
               titleStyle={styles.textConfirmButton}
               activeStyle={styles.confirmButton}
               disabled={false}
-              onPress={onPressConfirm}
+              onPress={handleConfirm}
             />
             <RectangleButton
               title="Huỷ"
               titleStyle={styles.textCancelButton}
               activeStyle={styles.canelButton}
               disabled={false}
-              onPress={onPressCanel}
+              onPress={onPressCancel}
               backgroundImage={BUTTON_WHITE}
             />
           </View>
@@ -55,8 +75,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '50%',
-    height: '20%',
+    width: windowWidth * 0.5,
+    height: windowHeight * 0.2,
     backgroundColor: '#fcd01e',
     borderRadius: 10,
     alignItems: 'center',

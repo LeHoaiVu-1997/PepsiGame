@@ -19,6 +19,9 @@ import {
   verifyOtpFailed,
   verifyOtpSuccess,
   resetAllStateAuthentication,
+  signOutBegin,
+  signOutSuccess,
+  signOutFailed,
 } from '../slices/authentication';
 import {of, concat} from 'rxjs';
 import {filter, switchMap, map, catchError} from 'rxjs/operators';
@@ -29,6 +32,7 @@ import {container} from 'tsyringe';
 import {SignUpUseCase} from '../../../domain/usecases/authentication/SignUp.use-case';
 import {RequestOtpUseCase} from '../../../domain/usecases/authentication/RequestOtp.use-case';
 import {VerifyOtpUseCase} from './../../../domain/usecases/authentication/VerifyOtp.use-case';
+import {SignOutUseCase} from '../../../domain/usecases/authentication/SignOut.use-case';
 
 const getUserEpic: Epic = action$ => {
   return action$.pipe(
@@ -106,10 +110,23 @@ const verifyOtpEpic: Epic = action$ => {
 const signOutEpic: Epic = action$ => {
   return action$.pipe(
     filter(signOut.match),
-    switchMap(() => {
+    switchMap(action => {
+      let usecase = container.resolve<SignOutUseCase>('SignOutUseCase');
       return concat(
-        of(resetAllStateAuthentication()),
-        of(resetAllStateAuthorized()),
+        of(signOutBegin()),
+        usecase.call().pipe(
+          switchMap(res => {
+            if (res.success === true) {
+              return [
+                signOutSuccess(),
+                resetAllStateAuthentication(),
+                resetAllStateAuthorized(),
+              ];
+            } else {
+              return [signOutFailed()];
+            }
+          }),
+        ),
       );
     }),
   );

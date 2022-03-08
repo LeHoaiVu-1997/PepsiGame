@@ -149,7 +149,7 @@ export const getGiftStore = async () => {
     .collection('gifts')
     .get()
     .catch(e => {
-      console.log('api error: ', e);
+      console.log('error: ', e);
     });
 
   let result = [];
@@ -216,4 +216,14 @@ export const saveGiftData = async (input: any) => {
       note: 'save gift data successful',
     };
   }
+};
+
+export const signOut = async () => {
+  await auth()
+    .signOut()
+    .then(() => {
+      console.log('signed out!');
+    })
+    .catch(error => console.log('sign out error: ', error));
+  return {success: true};
 };

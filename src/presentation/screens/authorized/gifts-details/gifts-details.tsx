@@ -336,10 +336,11 @@ const GiftsDetails: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
-            dispatch(signOut());
-            navigation.popToTop();
           }}
-          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+          onPressCancel={() => setLogoutModalVisible(!logoutModalVisible)}
+          sideEffect={() => {
+            navigation.navigate('Sign in');
+          }}
         />
       </ImageBackground>
     </View>

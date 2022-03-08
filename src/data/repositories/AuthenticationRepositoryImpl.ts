@@ -1,8 +1,9 @@
-import {requestOtp, verifyOtp} from './../provider/FirebaseAPI';
+import {requestOtp, signOut, verifyOtp} from './../provider/FirebaseAPI';
 import {Observable, from} from 'rxjs';
 import {
   RequestOtpResult,
   SignInResult,
+  SignOutResult,
   SignUpResult,
   VerifyOtpResult,
 } from '../../domain/entities/authentication';
@@ -10,6 +11,9 @@ import {AuthenticationRepository} from './../../domain/repositories/Authenticati
 import {getUser, signUp} from '../provider/FirebaseAPI';
 
 export class AuthenticationRepositoryImpl implements AuthenticationRepository {
+  signOut(): Observable<SignOutResult> {
+    return from(signOut());
+  }
   verifyOtp(otp: string, confirm: any): Observable<VerifyOtpResult> {
     return from(verifyOtp(otp, confirm));
   }

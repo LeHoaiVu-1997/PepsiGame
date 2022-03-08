@@ -43,7 +43,7 @@ const Game: React.FC = (props: any) => {
   }, [reward]);
 
   const handleGetRewardComplete = () => {
-    console.log('reward:', reward);
+    // console.log('reward:', reward);
 
     if (reward != null && reward !== undefined) {
       if (playType === 'exchange') {
@@ -106,10 +106,11 @@ const Game: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
-            dispatch(signOut());
-            navigation.popToTop();
           }}
-          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+          onPressCancel={() => setLogoutModalVisible(!logoutModalVisible)}
+          sideEffect={() => {
+            navigation.navigate('Sign in');
+          }}
         />
       </ImageBackground>
     </View>

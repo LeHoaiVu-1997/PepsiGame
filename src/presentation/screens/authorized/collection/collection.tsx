@@ -31,7 +31,7 @@ import {
   updateUser,
 } from '../../../redux/actions/authorized.actions';
 import {resetExchangeComboResult} from '../../../redux/slices/authorized';
-import { signOut } from '../../../redux/actions/authentication.actions';
+import {signOut} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -275,10 +275,11 @@ const Collection: React.FC = (props: any) => {
           visible={logoutModalVisible}
           onPressConfirm={() => {
             setLogoutModalVisible(!logoutModalVisible);
-            dispatch(signOut());
-            navigation.popToTop();
           }}
-          onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+          onPressCancel={() => setLogoutModalVisible(!logoutModalVisible)}
+          sideEffect={() => {
+            navigation.navigate('Sign in');
+          }}
         />
         <ModalGift
           visible={modalGiftVisible}

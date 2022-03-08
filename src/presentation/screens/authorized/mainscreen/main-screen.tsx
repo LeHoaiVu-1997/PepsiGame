@@ -32,9 +32,6 @@ const MainScreen: React.FC = (props: any) => {
   const playTimesExchange = user.play_time_exchange;
   const playTimesFree = user.play_time_free;
 
-  console.log('playTimesExchange : ', playTimesExchange);
-  console.log('playTimesFree : ', playTimesFree);
-
   const dispatch = useDispatch();
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
   const [ptsModalVisible, setPtsModalVisible] = useState(false);
@@ -125,10 +122,11 @@ const MainScreen: React.FC = (props: any) => {
             visible={logoutModalVisible}
             onPressConfirm={() => {
               setLogoutModalVisible(!logoutModalVisible);
-              dispatch(signOut());
-              navigation.popToTop();
             }}
-            onPressCanel={() => setLogoutModalVisible(!logoutModalVisible)}
+            onPressCancel={() => setLogoutModalVisible(!logoutModalVisible)}
+            sideEffect={() => {
+              navigation.navigate('Sign in');
+            }}
           />
           <PlayTimesSelection
             visible={ptsModalVisible}

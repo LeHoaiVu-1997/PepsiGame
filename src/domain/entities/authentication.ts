@@ -24,3 +24,8 @@ export interface VerifyOtpPayload {
   otp: string;
   confirm: any;
 }
+
+export interface SignOutResult {
+  success: boolean;
+  note?: string;
+}

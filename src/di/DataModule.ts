@@ -8,6 +8,7 @@ import {SignInUseCase} from '../domain/usecases/authentication/SignIn.use-case';
 import {RequestOtpUseCase} from '../domain/usecases/authentication/RequestOtp.use-case';
 import {VerifyOtpUseCase} from '../domain/usecases/authentication/VerifyOtp.use-case';
 import {SaveGiftDataUseCase} from '../domain/usecases/authorized/SaveGiftData';
+import {SignOutUseCase} from '../domain/usecases/authentication/SignOut.use-case';
 
 export function registerDataDependencies() {
   container.register('SignInUseCase', {
@@ -36,5 +37,8 @@ export function registerDataDependencies() {
   });
   container.register('SaveGiftDataUseCase', {
     useClass: SaveGiftDataUseCase,
+  });
+  container.register('SignOutUseCase', {
+    useClass: SignOutUseCase,
   });
 }

@@ -11,6 +11,8 @@ const INITIAL_STATE = {
   verifyOtpFailureNote: '',
   isUserConfirmed: false,
   isOtpValid: false,
+  isSigningOut: false,
+  isSignedOut: false,
 };
 
 const authenticationSlice = createSlice({
@@ -28,10 +30,12 @@ const authenticationSlice = createSlice({
     },
     signInBegin: state => {
       state.isAuthenticating = true;
+      // console.log('signInBegin');
     },
     signInSuccess: state => {
       state.isAuthenticating = false;
       state.isUserConfirmed = true;
+      // console.log('signInSuccess');
     },
     signInFailed: state => {
       state.isAuthenticating = false;
@@ -61,6 +65,7 @@ const authenticationSlice = createSlice({
     },
     requestOtpFailed: state => {
       state.isRequestingOtp = false;
+      state.isUserConfirmed = false;
       Alert.alert('Không nhận được otp confirmation');
     },
     verifyOtpBegin: state => {
@@ -74,6 +79,17 @@ const authenticationSlice = createSlice({
       state.isVeryfingOtp = false;
       state.isOtpValid = false;
       state.verifyOtpFailureNote = action.payload.note;
+    },
+    signOutBegin: state => {
+      state.isSigningOut = true;
+    },
+    signOutSuccess: state => {
+      state.isSigningOut = false;
+      state.isSignedOut = true;
+    },
+    signOutFailed: state => {
+      state.isSigningOut = false;
+      Alert.alert('Đăng xuất thất bại!');
     },
     resetAllStateAuthentication: () => INITIAL_STATE,
   },
@@ -96,6 +112,9 @@ export const {
   verifyOtpBegin,
   verifyOtpFailed,
   verifyOtpSuccess,
+  signOutBegin,
+  signOutSuccess,
+  signOutFailed,
   resetAllStateAuthentication,
 } = authenticationSlice.actions;
 export default authenticationSlice.reducer;
