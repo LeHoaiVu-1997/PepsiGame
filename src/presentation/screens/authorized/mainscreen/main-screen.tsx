@@ -21,6 +21,7 @@ import PlayTimesSelection from '../../../components/popup/double-buttons-popup';
 import Header from '../../../components/header/header';
 import {setPlayType} from '../../../redux/slices/authorized';
 import OutOfPlayTime from '../../../components/popup/single-button-popup';
+import TextButton from '../../../components/buttons/text-button';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -85,7 +86,11 @@ const MainScreen: React.FC = (props: any) => {
             <Image style={styles.headImage} source={HEAD} />
           </View>
           <View style={styles.bottomContainer}>
-            <Text style={styles.textInstruction}>{'Hướng dẫn'}</Text>
+            <TextButton
+              title="Hướng dẫn"
+              titleStyle={styles.textInstruction}
+              onPress={() => navigation.navigate('Instruction')}
+            />
             <RectangleButton
               title={'Chơi ngay'}
               activeStyle={styles.buttonRed}
@@ -165,8 +170,8 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   textInstruction: {
-    color: '#e3c91e',
-    fontSize: 25,
+    color: 'yellow',
+    fontSize: 22,
     fontWeight: 'bold',
     alignSelf: 'center',
   },

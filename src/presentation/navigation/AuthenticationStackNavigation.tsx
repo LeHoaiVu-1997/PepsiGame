@@ -10,6 +10,7 @@ import Congratulation from '../screens/authorized/congratulation/congratulation'
 import ScanCode from '../screens/authorized/scancode/ScanCode';
 import Collection from '../screens/authorized/collection/collection';
 import GiftsDetails from '../screens/authorized/gifts-details/gifts-details';
+import Instruction from '../screens/authorized/instruction/instruction';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ export const AuthenticationNavigatior: React.FC = () => {
       <Stack.Screen name="Scan code" component={ScanCode} />
       <Stack.Screen name="Collection" component={Collection} />
       <Stack.Screen name="Gifts details" component={GiftsDetails} />
+      <Stack.Screen name="Instruction" component={Instruction} />
     </Stack.Navigator>
   );
 };

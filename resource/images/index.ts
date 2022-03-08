@@ -56,3 +56,7 @@ export const EMPTY_BOX = require('./emptybox.png');
 
 export const BACKGROUND_GIFT_AVAILABLE = require('./giftavailablebackground.png');
 export const BACKGROUND_GIFT_EXCHANGED = require('./giftexchangedbackground.png');
+
+export const INSTRUCTION_STEP_1 = require('./step1.png');
+export const INSTRUCTION_STEP_2 = require('./step2.png');
+
