@@ -33,7 +33,6 @@ import GiftFormModal from '../../../components/popup/gift-form-modal';
 import {resetIsSaveGiftDataSuccess} from '../../../redux/slices/authorized';
 import ModalMessageSuccess from '../../../components/popup/popup-message-success';
 import LogoutPopup from '../../../components/popup/logout-popup';
-import {signOut} from '../../../redux/actions/authentication.actions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -54,7 +53,6 @@ const GiftsDetails: React.FC = (props: any) => {
   const [showGiftForm, setShowGiftForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(defaultItem);
   const user = useSelector((state: RootState) => state.authorized.user);
-  console.log('user: ', user);
 
   const isGettingGiftStore = useSelector(
     (state: RootState) => state.authorized.isGettingGiftStore,

@@ -190,19 +190,22 @@ export const saveGiftData = async (input: any) => {
       description: input.gift.description,
     });
 
-    let temptGift = JSON.parse(JSON.stringify(gift));
-    temptGift.quantity -= 1;
     await firestore()
       .collection('users')
       .doc(tempReceiver.phone_number)
       .update(tempReceiver);
 
     // Update gift store
+    let temptGift = JSON.parse(JSON.stringify(gift));
+    temptGift.quantity -= 1;
     await firestore().collection('gifts').doc(input.gift.id).update(temptGift);
 
     // Update purchaser
     let tempPurchaser = JSON.parse(JSON.stringify(purchaser));
     tempPurchaser.collection.coins -= input.gift.coins;
+    if (tempPurchaser.phone_number === tempReceiver.phone_number) {
+      tempPurchaser.gifts = tempReceiver.gifts;
+    }
     await firestore()
       .collection('users')
       .doc(tempPurchaser.phone_number)
